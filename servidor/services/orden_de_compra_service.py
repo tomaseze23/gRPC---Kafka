@@ -1,4 +1,4 @@
-from kafka_producer import KafkaProducer  
+from kafka.kafka_producer import KafkaProducer  
 from datetime import datetime, timedelta
 
 class OrdenDeCompraService:

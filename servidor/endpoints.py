@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
 from services.orden_de_compra_service import OrdenDeCompraService
-from kafka_producer import KafkaProducer
+from kafka.kafka_producer import KafkaProducer
 from datetime import datetime, timedelta
 
 def create_orden_de_compra_blueprint(db):

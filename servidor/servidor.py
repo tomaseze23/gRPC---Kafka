@@ -2,16 +2,16 @@ import threading
 import grpc
 from concurrent import futures
 from flask import Flask, jsonify, render_template  
-import producto_pb2_grpc
-import tienda_pb2_grpc
-import usuario_pb2_grpc
-import producto_tienda_pb2_grpc
+from grpcpb2 import producto_pb2_grpc
+from grpcpb2 import tienda_pb2_grpc
+from grpcpb2 import usuario_pb2_grpc
+from grpcpb2 import producto_tienda_pb2_grpc
 from main import InMemoryDatabase  
 from services.usuario_service import UsuarioService
 from services.producto_service import ProductoService
 from services.producto_tienda_service import ProductoTiendaService
 from services.tienda_service import TiendaService
-from kafka_consumer import KafkaConsumer  
+from kafka import kafka_consumer  
 from endpoints import create_orden_de_compra_blueprint, create_producto_blueprint  
 
 db = InMemoryDatabase()
@@ -29,11 +29,11 @@ def serve_grpc():
     server.start()
     print("Servidor gRPC corriendo en el puerto 50051...")
 
-    kafka_consumer = KafkaConsumer('orden-de-compra', db) 
+    kafka_consumer = kafka_consumer.KafkaConsumer('orden-de-compra', db) 
     kafka_thread = threading.Thread(target=kafka_consumer.start_consuming)
     kafka_thread.start()
 
-    kafka_recepcion_consumer = KafkaConsumer('recepcion', db) 
+    kafka_recepcion_consumer = kafka_consumer.KafkaConsumer('recepcion', db) 
     kafka_recepcion_thread = threading.Thread(target=kafka_recepcion_consumer.start_consuming)
     kafka_recepcion_thread.start()
 

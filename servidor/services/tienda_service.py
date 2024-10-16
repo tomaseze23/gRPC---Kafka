@@ -1,5 +1,5 @@
-import tienda_pb2
-import tienda_pb2_grpc
+from grpcpb2 import tienda_pb2
+from grpcpb2 import tienda_pb2_grpc
 
 class TiendaService(tienda_pb2_grpc.TiendaServiceServicer):
     def __init__(self, db):

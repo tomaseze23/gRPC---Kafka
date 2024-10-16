@@ -1,5 +1,5 @@
-import usuario_pb2
-import usuario_pb2_grpc
+from grpcpb2 import usuario_pb2
+from grpcpb2 import usuario_pb2_grpc
 
 class UsuarioService(usuario_pb2_grpc.UsuarioServiceServicer):
     def __init__(self, db):

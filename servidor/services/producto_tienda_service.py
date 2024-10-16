@@ -1,6 +1,5 @@
-import producto_tienda_pb2
-import producto_tienda_pb2_grpc
-from empty_pb2 import Empty
+from grpcpb2 import producto_tienda_pb2
+from grpcpb2 import producto_tienda_pb2_grpc
 
 class ProductoTiendaService(producto_tienda_pb2_grpc.ProductoTiendaServiceServicer):
     def __init__(self, db):

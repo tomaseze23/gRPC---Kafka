@@ -1,6 +1,6 @@
-import producto_pb2
-import producto_pb2_grpc
-from kafka_producer import KafkaProducer
+from grpcpb2 import producto_pb2
+from grpcpb2 import producto_pb2_grpc
+from kafka.kafka_producer import KafkaProducer
 
 class ProductoService(producto_pb2_grpc.ProductoServiceServicer):
     def __init__(self, db):

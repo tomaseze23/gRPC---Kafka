@@ -1,5 +1,5 @@
 from sqlalchemy import Column, BigInteger, Text, ForeignKey, TIMESTAMP, CheckConstraint
-from database_dos import Base
+from db.database import Base
 
 class OrdenCompra(Base):
     __tablename__ = 'ordenes_compra'

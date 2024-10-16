@@ -11,7 +11,6 @@ from services.usuario_service import UsuarioService
 from services.producto_service import ProductoService
 from services.producto_tienda_service import ProductoTiendaService
 from services.tienda_service import TiendaService
-from kafka import kafka_consumer  
 from endpoints import create_orden_de_compra_blueprint, create_producto_blueprint  
 
 db = InMemoryDatabase()

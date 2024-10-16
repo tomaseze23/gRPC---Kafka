@@ -1,92 +1,90 @@
 from grpcpb2 import tienda_pb2
 from grpcpb2 import tienda_pb2_grpc
+from sqlalchemy.orm import Session
+from models import Tienda
+from models import ProductoTienda
 
 class TiendaService(tienda_pb2_grpc.TiendaServiceServicer):
-    def __init__(self, db):
-        self.db = db
+    def __init__(self, db_session: Session):
+        self.db_session = db_session
 
     def CreateTienda(self, request, context):
-        cursor = self.db.get_cursor()
-        
-        cursor.execute(
-            """
-            INSERT INTO tiendas (codigo, direccion, ciudad, provincia, habilitada) 
-            VALUES (?, ?, ?, ?, ?)
-            """, 
-            (request.codigo, request.direccion, request.ciudad, request.provincia, request.habilitada)
+        nueva_tienda = Tienda(
+            codigo=request.codigo,
+            direccion=request.direccion,
+            ciudad=request.ciudad,
+            provincia=request.provincia,
+            habilitada=request.habilitada
         )
         
+        # Añadir la nueva tienda a la sesión
+        self.db_session.add(nueva_tienda)
+        
+        # Guardar los cambios en la base de datos
+        self.db_session.commit()
+        
+        # Guardar la relación con los productos
         for producto_id in request.producto_ids:
-            cursor.execute(
-                """
-                INSERT INTO tienda_productos (tienda_codigo, producto_id)
-                VALUES (?, ?)
-                """, 
-                (request.codigo, producto_id)
-            )
-        
-        self.db.commit()
-        
+            tienda_producto = ProductoTienda(tienda_codigo=request.codigo, producto_id=producto_id)
+            self.db_session.add(tienda_producto)
+
+        self.db_session.commit()
+
         return request
     
     def GetTienda(self, request, context):
-        cursor = self.db.get_cursor()
-        cursor.execute("SELECT * FROM tiendas WHERE codigo=?", (request.codigo,))
-        row = cursor.fetchone()
-        if row:
+        tienda = self.db_session.query(Tienda).filter_by(codigo=request.codigo).first()
+        
+        if tienda:
             return tienda_pb2.Tienda(
-                codigo=row[0],          
-                direccion=row[1],       
-                ciudad=row[2],         
-                provincia=row[3],       
-                habilitada=row[4],     
-                producto_ids=row[5:]    
+                codigo=tienda.codigo,
+                direccion=tienda.direccion,
+                ciudad=tienda.ciudad,
+                provincia=tienda.provincia,
+                habilitada=tienda.habilitada,
+                producto_ids=[]  # Debes implementar la lógica para obtener los productos relacionados
             )
         else:
             return tienda_pb2.Tienda()
-
+    
     def UpdateTienda(self, request, context):
-        cursor = self.db.get_cursor()
-        cursor.execute(
-            "UPDATE tiendas SET direccion=?, ciudad=?, provincia=?, habilitada=? WHERE codigo=?", 
-            (request.direccion, request.ciudad, request.provincia, request.habilitada, request.codigo) 
-        )
-        self.db.commit()
-        return request
+        tienda = self.db_session.query(Tienda).get(request.codigo)
+        
+        if tienda:
+            tienda.direccion = request.direccion
+            tienda.ciudad = request.ciudad
+            tienda.provincia = request.provincia
+            tienda.habilitada = request.habilitada
+            self.db_session.commit()
+            return request
+        else:
+            context.set_details("Tienda no encontrada.")
+            return tienda_pb2.Tienda()
 
     def DeleteTienda(self, request, context):
-        cursor = self.db.get_cursor()
-        cursor.execute("DELETE FROM tiendas WHERE codigo=?", (request.codigo,))  
-        self.db.commit()
-        return request
-
+        tienda = self.db_session.query(Tienda).get(request.codigo)
+        
+        if tienda:
+            self.db_session.delete(tienda)
+            self.db_session.commit()
+            return request
+        else:
+            context.set_details("Tienda no encontrada.")
+            return tienda_pb2.Tienda()
 
     def ListTiendas(self, request, context):
-        cursor = self.db.get_cursor()
-
-        query = '''
-        SELECT 
-            t.codigo, t.direccion, t.ciudad, t.provincia, t.habilitada, 
-            GROUP_CONCAT(pt.producto_id) as producto_ids
-        FROM tiendas t
-        LEFT JOIN producto_tienda pt ON t.codigo = pt.tienda_id
-        GROUP BY t.codigo, t.direccion, t.ciudad, t.provincia, t.habilitada
-        '''
-        cursor.execute(query)
-        rows = cursor.fetchall()
-
-        tiendas = []
-        for row in rows:
-            producto_ids = [int(pid) for pid in row[5].split(',')] if row[5] else []
-
-            tienda = tienda_pb2.Tienda(
-                codigo=row[0],
-                direccion=row[1],
-                ciudad=row[2],
-                provincia=row[3],
-                habilitada=row[4],
-                producto_ids=producto_ids
-            )
-            tiendas.append(tienda)
-
-        return tienda_pb2.TiendaList(tiendas=tiendas)
+        tiendas = self.db_session.query(Tienda).all()
+        
+        # Aquí también necesitarías implementar la lógica para obtener los productos relacionados
+        tiendas_list = [
+            tienda_pb2.Tienda(
+                codigo=tienda.codigo,
+                direccion=tienda.direccion,
+                ciudad=tienda.ciudad,
+                provincia=tienda.provincia,
+                habilitada=tienda.habilitada,
+                producto_ids=[]  # Debes implementar la lógica para obtener los productos relacionados
+            ) for tienda in tiendas
+        ]
+        
+        return tienda_pb2.TiendaList(tiendas=tiendas_list)

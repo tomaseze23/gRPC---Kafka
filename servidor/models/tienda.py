@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Text, Boolean
-from database_dos import Base
+from db.database import Base
 
 class Tienda(Base):
     __tablename__ = 'tiendas'

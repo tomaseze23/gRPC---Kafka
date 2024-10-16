@@ -1,103 +1,98 @@
 from grpcpb2 import producto_pb2
 from grpcpb2 import producto_pb2_grpc
 from kafka.kafka_producer import KafkaProducer
+from sqlalchemy.orm import Session
+from models import Producto  # Asegúrate de que tu modelo esté importado correctamente
 
 class ProductoService(producto_pb2_grpc.ProductoServiceServicer):
-    def __init__(self, db):
-        self.db = db
+    def __init__(self, db_session: Session):
+        self.db_session = db_session
         self.kafka_producer = KafkaProducer()
 
     def CreateProducto(self, request, context):
-        cursor = self.db.get_cursor()
-        cursor.execute(
-            "INSERT INTO productos (nombre, codigo, talle, foto, color) VALUES (?, ?, ?, ?, ?)", 
-            (request.nombre, request.codigo, request.talle, request.foto, request.color)
+        nuevo_producto = Producto(
+            nombre=request.nombre,
+            codigo=request.codigo,
+            talle=request.talle,
+            foto=request.foto,
+            color=request.color
         )
-        self.db.commit()
+        self.db_session.add(nuevo_producto)
+        self.db_session.commit()
         return request
 
     def GetProducto(self, request, context):
-        cursor = self.db.get_cursor()
-        cursor.execute("SELECT * FROM productos WHERE id=?", (request.id,))
-        row = cursor.fetchone()
-        if row:
+        producto = self.db_session.query(Producto).get(request.id)
+        if producto:
             return producto_pb2.Producto(
-                id=row[0], nombre=row[1], codigo=row[2], talle=row[3], foto=row[4], color=row[5]
+                id=producto.id,
+                nombre=producto.nombre,
+                codigo=producto.codigo,
+                talle=producto.talle,
+                foto=producto.foto,
+                color=producto.color
             )
         else:
             return producto_pb2.Producto()
 
     def UpdateProducto(self, request, context):
-        cursor = self.db.get_cursor()
-        cursor.execute(
-            "UPDATE productos SET nombre=?, codigo=?, talle=?, foto=?, color=? WHERE id=?", 
-            (request.nombre, request.codigo, request.talle, request.foto, request.color, request.id)
-        )
-        self.db.commit()
-        return request
+        producto = self.db_session.query(Producto).get(request.id)
+        if producto:
+            producto.nombre = request.nombre
+            producto.codigo = request.codigo
+            producto.talle = request.talle
+            producto.foto = request.foto
+            producto.color = request.color
+            self.db_session.commit()
+            return request
+        else:
+            context.set_details("Producto no encontrado.")
+            return producto_pb2.Producto()
 
     def DeleteProducto(self, request, context):
-        cursor = self.db.get_cursor()
-        cursor.execute("DELETE FROM productos WHERE id=?", (request.id,))
-        self.db.commit()
-        return request
+        producto = self.db_session.query(Producto).get(request.id)
+        if producto:
+            self.db_session.delete(producto)
+            self.db_session.commit()
+            return request
+        else:
+            context.set_details("Producto no encontrado.")
+            return producto_pb2.Producto()
 
     def ListProductos(self, request, context):
-        cursor = self.db.get_cursor()
+        productos = self.db_session.query(Producto).all()
+        productos_list = [
+            producto_pb2.Producto(
+                id=producto.id,
+                nombre=producto.nombre,
+                codigo=producto.codigo,
+                talle=producto.talle,
+                foto=producto.foto,
+                color=producto.color
+            ) for producto in productos
+        ]
+        return producto_pb2.ProductoList(productos=productos_list)
 
-        query = '''
-        SELECT 
-            p.id, p.nombre, p.codigo, p.talle, p.foto, p.color,
-            GROUP_CONCAT(pt.tienda_id) as tienda_ids
-        FROM productos p
-        LEFT JOIN producto_tienda pt ON p.id = pt.producto_id
-        GROUP BY p.id, p.nombre, p.codigo, p.talle, p.foto, p.color
-        '''
-        
-        cursor.execute(query)
-        rows = cursor.fetchall()
-
-        productos = []
-        for row in rows:
-            tienda_ids = row[6].split(',') if row[6] else []
-
-            producto = producto_pb2.Producto(
-                id=row[0],
-                nombre=row[1],
-                codigo=row[2],
-                talle=row[3],
-                foto=row[4],
-                color=row[5],
-                tienda_ids=tienda_ids  
-            )
-            productos.append(producto)
-
-        return producto_pb2.ProductoList(productos=productos)
-    
     def crear_producto(self, nombre, codigo, talle, foto, color, cantidad_stock):
         """
         Crea un nuevo producto en la base de datos y envía un mensaje a Kafka.
         """
-        cursor = self.db.get_cursor()
-
-        producto_id = self.insertar_producto(cursor, nombre, codigo, talle, foto, color, cantidad_stock)
-
-        self.enviar_mensaje_kafka(producto_id, codigo, talle, color, foto)
-
-        self.db.commit()
-
-        return producto_id
-
-    def insertar_producto(self, cursor, nombre, codigo, talle, foto, color, cantidad_stock):
-        """Inserta un nuevo producto en la base de datos y devuelve su ID."""
-        cursor.execute(
-            '''
-            INSERT INTO productos (nombre, codigo, talle, foto, color, cantidad_stock_proveedor)
-            VALUES (?, ?, ?, ?, ?, ?)
-            ''', 
-            (nombre, codigo, talle, foto, color, cantidad_stock)
+        nuevo_producto = Producto(
+            nombre=nombre,
+            codigo=codigo,
+            talle=talle,
+            foto=foto,
+            color=color,
+            cantidad_stock_proveedor=cantidad_stock
         )
-        return cursor.lastrowid
+
+        self.db_session.add(nuevo_producto)
+        self.db_session.commit()
+
+        # Enviar mensaje a Kafka
+        self.enviar_mensaje_kafka(nuevo_producto.id, codigo, talle, color, foto)
+
+        return nuevo_producto.id
 
     def enviar_mensaje_kafka(self, producto_id, codigo, talle, color, foto):
         """Envía un mensaje a Kafka con la información del nuevo producto."""
@@ -108,4 +103,4 @@ class ProductoService(producto_pb2_grpc.ProductoServiceServicer):
             'color': color,
             'foto': foto
         }
-        self.kafka_producer.send_message("/novedades", mensaje_kafka)  
+        self.kafka_producer.send_message("/novedades", mensaje_kafka)

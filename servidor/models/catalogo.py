@@ -1,5 +1,5 @@
 from sqlalchemy import Column, BigInteger, Text, TIMESTAMP, ForeignKey
-from database_dos import Base
+from db.database import Base
 
 class Catalogo(Base):
     __tablename__ = 'catalogos'

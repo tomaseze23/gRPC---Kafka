@@ -1,5 +1,5 @@
 from sqlalchemy import Column, BigInteger, Text, JSON, TIMESTAMP, ForeignKey
-from database_dos import Base
+from db.database import Base
 
 class FiltroUsuario(Base):
     __tablename__ = 'filtros_usuario'

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://www.example.com/catalogoProducto"
+           xmlns:tns="http://www.example.com/catalogoProducto"
+           elementFormDefault="qualified">
+
+    <xs:complexType name="CatalogoProducto">
+        <xs:sequence>
+            <xs:element name="id" type="xs:long"/>
+            <xs:element name="catalogoId" type="xs:long"/>
+            <xs:element name="nombreProducto" type="xs:string"/>
+            <xs:element name="precio" type="xs:double"/>
+            <xs:element name="descripcion" type="xs:string" minOccurs="0"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="getCatalogoProductoRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="id" type="xs:long"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getCatalogoProductoResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="catalogoProducto" type="tns:CatalogoProducto"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>

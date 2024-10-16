@@ -1,5 +1,3 @@
--- Migrations will appear here as you chat with AI
-
 create table if not exists tiendas (
   codigo text primary key,
   direccion text,

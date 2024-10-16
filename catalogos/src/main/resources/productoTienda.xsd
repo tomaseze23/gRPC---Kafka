@@ -1,0 +1,34 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:tns="http://www.example.com/producto_tienda"
+    targetNamespace="http://www.example.com/producto_tienda"
+    elementFormDefault="qualified">
+
+    <xs:complexType name="productoTienda">
+        <xs:sequence>
+            <xs:element name="id" type="xs:long" />
+            <xs:element name="producto_id" type="xs:long" />
+            <xs:element name="tienda_id" type="xs:string" />
+            <xs:element name="color" type="xs:string" minOccurs="0" />
+            <xs:element name="talle" type="xs:string" minOccurs="0" />
+            <xs:element name="cantidad" type="xs:int" minOccurs="0" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="getProductoTiendaRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="producto_id" type="xs:long" />
+                <xs:element name="tienda_id" type="xs:string" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getProductoTiendaResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="productoTienda" type="tns:productoTienda" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>

@@ -1,0 +1,34 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:tns="http://www.example.com/ordenes_compra"
+    targetNamespace="http://www.example.com/ordenes_compra"
+    elementFormDefault="qualified">
+
+    <xs:complexType name="ordenCompra">
+        <xs:sequence>
+            <xs:element name="id" type="xs:long" />
+            <xs:element name="tienda_id" type="xs:string" />
+            <xs:element name="fecha_solicitud" type="xs:dateTime" minOccurs="0" />
+            <xs:element name="fecha_envio" type="xs:dateTime" minOccurs="0" />
+            <xs:element name="fecha_recepcion" type="xs:dateTime" minOccurs="0" />
+            <xs:element name="estado" type="xs:string" />
+            <xs:element name="observaciones" type="xs:string" minOccurs="0" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="getOrdenCompraRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="id" type="xs:long" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getOrdenCompraResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="ordenCompra" type="tns:ordenCompra" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>

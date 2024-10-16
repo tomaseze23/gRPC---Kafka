@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://www.example.com/filtroUsuario"
+           xmlns:tns="http://www.example.com/filtroUsuario"
+           elementFormDefault="qualified">
+
+    <xs:complexType name="FiltroUsuario">
+        <xs:sequence>
+            <xs:element name="id" type="xs:long"/>
+            <xs:element name="usuarioId" type="xs:long"/> <!-- Referencia al ID de Usuario -->
+            <xs:element name="nombreFiltro" type="xs:string"/>
+            <xs:element name="filtro" type="xs:string"/>  <!-- Considerar un tipo adecuado para JSON -->
+            <xs:element name="fechaCreacion" type="xs:dateTime" minOccurs="0"/> <!-- Opcional -->
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="getFiltroUsuarioRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="id" type="xs:long"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getFiltroUsuarioResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="filtroUsuario" type="tns:FiltroUsuario"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>

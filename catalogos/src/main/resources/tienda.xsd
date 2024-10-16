@@ -1,0 +1,32 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:tns="http://www.example.com/tiendas"
+    targetNamespace="http://www.example.com/tiendas"
+    elementFormDefault="qualified">
+
+    <xs:complexType name="tienda">
+        <xs:sequence>
+            <xs:element name="codigo" type="xs:string" />
+            <xs:element name="direccion" type="xs:string" />
+            <xs:element name="ciudad" type="xs:string" />
+            <xs:element name="provincia" type="xs:string" />
+            <xs:element name="habilitada" type="xs:boolean" minOccurs="0" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="getTiendaRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="codigo" type="xs:string" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getTiendaResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="tienda" type="tns:tienda" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>

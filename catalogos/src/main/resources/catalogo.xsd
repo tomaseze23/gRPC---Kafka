@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="http://www.example.com/catalogo"
+           xmlns:tns="http://www.example.com/catalogo"
+           elementFormDefault="qualified">
+
+    <xs:complexType name="Catalogo">
+        <xs:sequence>
+            <xs:element name="id" type="xs:long"/>
+            <xs:element name="tiendaId" type="xs:string"/>
+            <xs:element name="nombreCatalogo" type="xs:string"/>
+            <xs:element name="fechaCreacion" type="xs:dateTime" minOccurs="0"/> 
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:element name="getCatalogoRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="id" type="xs:long"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getCatalogoResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="catalogo" type="tns:Catalogo"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>

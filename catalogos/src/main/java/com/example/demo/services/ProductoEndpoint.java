@@ -1,5 +1,7 @@
 package com.example.demo.services;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
@@ -8,8 +10,8 @@ import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 
 import com.example.demo.models.Producto;
 import com.example.demo.repository.ProductoRepository;
-import com.example.productos.GetProductoRequest;
-import com.example.productos.GetProductoResponse;
+import com.example.productos.GetAllProductosRequest;
+import com.example.productos.GetAllProductosResponse;
 
 @Endpoint
 public class ProductoEndpoint {
@@ -18,23 +20,28 @@ public class ProductoEndpoint {
     @Autowired
     private ProductoRepository productoRepository;
 
-    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "getProductoRequest")
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "getAllProductosRequest")
     @ResponsePayload
-    public GetProductoResponse getProducto(@RequestPayload GetProductoRequest request) {
-        GetProductoResponse response = new GetProductoResponse();
-        Producto producto = productoRepository.findById(Long.valueOf(request.getCodigo())).orElse(null);
+    public GetAllProductosResponse getAllProductos(@RequestPayload GetAllProductosRequest request) {
+        GetAllProductosResponse response = new GetAllProductosResponse();
 
-        com.example.productos.Producto productoResponse = new com.example.productos.Producto();
-        if (producto != null) {
-            productoResponse.setId(producto.getId());
-            productoResponse.setNombre(producto.getNombre());
-            productoResponse.setCodigo(producto.getCodigo());
-            productoResponse.setTalle(producto.getTalle());
-            productoResponse.setFoto(producto.getFoto());
-            productoResponse.setColor(producto.getColor());
-            productoResponse.setCantidadStockProveedor(producto.getCantidadStockProveedor());
-            response.setProducto(productoResponse);
+        List<Producto> productos = productoRepository.findAll();
+        for (Producto producto : productos) {
+            response.getProducto().add(mapProductoToResponse(producto));
         }
+
         return response;
+    }
+
+    private com.example.productos.Producto mapProductoToResponse(Producto producto) {
+        com.example.productos.Producto responseProducto = new com.example.productos.Producto();
+        responseProducto.setId(producto.getId());
+        responseProducto.setNombre(producto.getNombre());
+        responseProducto.setCodigo(producto.getCodigo());
+        responseProducto.setTalle(producto.getTalle());
+        responseProducto.setFoto(producto.getFoto());
+        responseProducto.setColor(producto.getColor());
+        responseProducto.setCantidadStockProveedor(producto.getCantidadStockProveedor());
+        return responseProducto;
     }
 }

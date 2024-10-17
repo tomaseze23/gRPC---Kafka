@@ -1,7 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-    xmlns:tns="http://www.example.com/productos"
-    targetNamespace="http://www.example.com/productos"
-    elementFormDefault="qualified">
+           xmlns:tns="http://www.example.com/productos"
+           targetNamespace="http://www.example.com/productos"
+           elementFormDefault="qualified">
 
     <xs:complexType name="producto">
         <xs:sequence>
@@ -27,6 +28,20 @@
         <xs:complexType>
             <xs:sequence>
                 <xs:element name="producto" type="tns:producto" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getAllProductosRequest">
+        <xs:complexType>
+            <xs:sequence/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getAllProductosResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="producto" type="tns:producto" maxOccurs="unbounded"/>
             </xs:sequence>
         </xs:complexType>
     </xs:element>

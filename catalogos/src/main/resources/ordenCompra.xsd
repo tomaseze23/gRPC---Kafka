@@ -31,4 +31,18 @@
         </xs:complexType>
     </xs:element>
 
+    <xs:element name="getAllOrdenesCompraRequest">
+        <xs:complexType>
+            <xs:sequence/>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getAllOrdenesCompraResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="ordenCompra" type="tns:ordenCompra" maxOccurs="unbounded"/>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
 </xs:schema>

@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           targetNamespace="http://www.example.com/catalogoProducto"
-           xmlns:tns="http://www.example.com/catalogoProducto"
-           elementFormDefault="qualified">
+    targetNamespace="http://www.example.com/catalogoProducto"
+    xmlns:tns="http://www.example.com/catalogoProducto"
+    elementFormDefault="qualified">
 
     <xs:complexType name="CatalogoProducto">
         <xs:sequence>
-            <xs:element name="id" type="xs:long"/>
-            <xs:element name="catalogoId" type="xs:long"/>
-            <xs:element name="nombreProducto" type="xs:string"/>
-            <xs:element name="precio" type="xs:double"/>
-            <xs:element name="descripcion" type="xs:string" minOccurs="0"/>
+            <xs:element name="id" type="xs:long" />
+            <xs:element name="catalogoId" type="xs:long" />
+            <xs:element name="nombreProducto" type="xs:string" />
+            <xs:element name="precio" type="xs:double" />
+            <xs:element name="descripcion" type="xs:string" minOccurs="0" />
         </xs:sequence>
     </xs:complexType>
 
     <xs:element name="getCatalogoProductoRequest">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="id" type="xs:long"/>
+                <xs:element name="id" type="xs:long" />
             </xs:sequence>
         </xs:complexType>
     </xs:element>
@@ -25,9 +25,89 @@
     <xs:element name="getCatalogoProductoResponse">
         <xs:complexType>
             <xs:sequence>
-                <xs:element name="catalogoProducto" type="tns:CatalogoProducto"/>
+                <xs:element name="catalogoProducto" type="tns:CatalogoProducto" />
             </xs:sequence>
         </xs:complexType>
     </xs:element>
+
+    <xs:element name="createCatalogoProductoRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="catalogoProducto" type="tns:CatalogoProducto" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="createCatalogoProductoResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="catalogoProductoId" type="xs:long" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="updateCatalogoProductoRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="catalogoProducto" type="tns:CatalogoProducto" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="updateCatalogoProductoResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="success" type="xs:boolean" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="deleteCatalogoProductoRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="id" type="xs:long" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="deleteCatalogoProductoResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="success" type="xs:boolean" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:element name="getAllCatalogoProductoByCatalogoRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="catalogoId" type="xs:long" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="getAllCatalogoProductoByCatalogoResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="catalogoProducto" type="tns:CatalogoProducto"
+                    maxOccurs="unbounded" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="getAllCatalogoProductoByTiendaRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="tiendaId" type="xs:string" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+    <xs:element name="getAllCatalogoProductoByTiendaResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="catalogoProducto" type="tns:CatalogoProducto"
+                    maxOccurs="unbounded" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
 
 </xs:schema>

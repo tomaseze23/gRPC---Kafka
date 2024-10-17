@@ -1,6 +1,6 @@
 import json
 from confluent_kafka import Consumer, KafkaError, KafkaException
-from services.orden_de_compra_service import OrdenDeCompraService  
+from orden_de_compra_service import OrdenDeCompraService  
 
 class KafkaConsumer:
     def __init__(self, topic, db):

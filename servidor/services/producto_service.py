@@ -1,13 +1,11 @@
 from grpcpb2 import producto_pb2
 from grpcpb2 import producto_pb2_grpc
-from kafka.kafka_producer import KafkaProducer
 from sqlalchemy.orm import Session
 from models import Producto  # Asegúrate de que tu modelo esté importado correctamente
 
 class ProductoService(producto_pb2_grpc.ProductoServiceServicer):
     def __init__(self, db_session: Session):
         self.db_session = db_session
-        self.kafka_producer = KafkaProducer()
 
     def CreateProducto(self, request, context):
         nuevo_producto = Producto(
@@ -75,7 +73,7 @@ class ProductoService(producto_pb2_grpc.ProductoServiceServicer):
 
     def crear_producto(self, nombre, codigo, talle, foto, color, cantidad_stock):
         """
-        Crea un nuevo producto en la base de datos y envía un mensaje a Kafka.
+        Crea un nuevo producto en la base de datos
         """
         nuevo_producto = Producto(
             nombre=nombre,
@@ -89,17 +87,5 @@ class ProductoService(producto_pb2_grpc.ProductoServiceServicer):
         self.db_session.add(nuevo_producto)
         self.db_session.commit()
 
-        self.enviar_mensaje_kafka(nuevo_producto.id, codigo, talle, color, foto)
 
         return nuevo_producto.id
-
-    def enviar_mensaje_kafka(self, producto_id, codigo, talle, color, foto):
-        """Envía un mensaje a Kafka con la información del nuevo producto."""
-        mensaje_kafka = {
-            'producto_id': producto_id,
-            'codigo': codigo,
-            'talle': talle,
-            'color': color,
-            'foto': foto
-        }
-        self.kafka_producer.send_message("/novedades", mensaje_kafka)

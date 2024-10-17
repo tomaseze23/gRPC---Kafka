@@ -1,5 +1,8 @@
 syntax = "proto3";
 
+package grpcpb2;
+
+
 import "empty.proto";
 
 // Mensaje para la entidad ProductoTienda

@@ -24,13 +24,13 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0b\x65mpty.proto\"\x07\n\x05\x45mptyb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0b\x65mpty.proto\x12\x07grpcpb2\"\x07\n\x05\x45mptyb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
 _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'empty_pb2', _globals)
 if not _descriptor._USE_C_DESCRIPTORS:
   DESCRIPTOR._loaded_options = None
-  _globals['_EMPTY']._serialized_start=15
-  _globals['_EMPTY']._serialized_end=22
+  _globals['_EMPTY']._serialized_start=24
+  _globals['_EMPTY']._serialized_end=31
 # @@protoc_insertion_point(module_scope)

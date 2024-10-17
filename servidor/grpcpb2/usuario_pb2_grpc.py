@@ -3,10 +3,10 @@
 import grpc
 import warnings
 
-import empty_pb2 as empty__pb2
-import usuario_pb2 as usuario__pb2
+from grpcpb2 import empty_pb2 as empty__pb2
+from grpcpb2 import usuario_pb2 as usuario__pb2
 
-GRPC_GENERATED_VERSION = '1.66.1'
+GRPC_GENERATED_VERSION = '1.67.0'
 GRPC_VERSION = grpc.__version__
 _version_not_supported = False
 
@@ -37,32 +37,32 @@ class UsuarioServiceStub(object):
             channel: A grpc.Channel.
         """
         self.CreateUsuario = channel.unary_unary(
-                '/UsuarioService/CreateUsuario',
+                '/grpcpb2.UsuarioService/CreateUsuario',
                 request_serializer=usuario__pb2.Usuario.SerializeToString,
                 response_deserializer=usuario__pb2.Usuario.FromString,
                 _registered_method=True)
         self.GetUsuario = channel.unary_unary(
-                '/UsuarioService/GetUsuario',
+                '/grpcpb2.UsuarioService/GetUsuario',
                 request_serializer=usuario__pb2.Usuario.SerializeToString,
                 response_deserializer=usuario__pb2.Usuario.FromString,
                 _registered_method=True)
         self.UpdateUsuario = channel.unary_unary(
-                '/UsuarioService/UpdateUsuario',
+                '/grpcpb2.UsuarioService/UpdateUsuario',
                 request_serializer=usuario__pb2.Usuario.SerializeToString,
                 response_deserializer=usuario__pb2.Usuario.FromString,
                 _registered_method=True)
         self.DeleteUsuario = channel.unary_unary(
-                '/UsuarioService/DeleteUsuario',
+                '/grpcpb2.UsuarioService/DeleteUsuario',
                 request_serializer=usuario__pb2.Usuario.SerializeToString,
                 response_deserializer=usuario__pb2.Usuario.FromString,
                 _registered_method=True)
         self.ListUsuarios = channel.unary_unary(
-                '/UsuarioService/ListUsuarios',
+                '/grpcpb2.UsuarioService/ListUsuarios',
                 request_serializer=empty__pb2.Empty.SerializeToString,
                 response_deserializer=usuario__pb2.UsuarioList.FromString,
                 _registered_method=True)
         self.Login = channel.unary_unary(
-                '/UsuarioService/Login',
+                '/grpcpb2.UsuarioService/Login',
                 request_serializer=usuario__pb2.LoginRequest.SerializeToString,
                 response_deserializer=usuario__pb2.LoginResponse.FromString,
                 _registered_method=True)
@@ -143,9 +143,9 @@ def add_UsuarioServiceServicer_to_server(servicer, server):
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'UsuarioService', rpc_method_handlers)
+            'grpcpb2.UsuarioService', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
-    server.add_registered_method_handlers('UsuarioService', rpc_method_handlers)
+    server.add_registered_method_handlers('grpcpb2.UsuarioService', rpc_method_handlers)
 
 
  # This class is part of an EXPERIMENTAL API.
@@ -167,7 +167,7 @@ class UsuarioService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/UsuarioService/CreateUsuario',
+            '/grpcpb2.UsuarioService/CreateUsuario',
             usuario__pb2.Usuario.SerializeToString,
             usuario__pb2.Usuario.FromString,
             options,
@@ -194,7 +194,7 @@ class UsuarioService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/UsuarioService/GetUsuario',
+            '/grpcpb2.UsuarioService/GetUsuario',
             usuario__pb2.Usuario.SerializeToString,
             usuario__pb2.Usuario.FromString,
             options,
@@ -221,7 +221,7 @@ class UsuarioService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/UsuarioService/UpdateUsuario',
+            '/grpcpb2.UsuarioService/UpdateUsuario',
             usuario__pb2.Usuario.SerializeToString,
             usuario__pb2.Usuario.FromString,
             options,
@@ -248,7 +248,7 @@ class UsuarioService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/UsuarioService/DeleteUsuario',
+            '/grpcpb2.UsuarioService/DeleteUsuario',
             usuario__pb2.Usuario.SerializeToString,
             usuario__pb2.Usuario.FromString,
             options,
@@ -275,7 +275,7 @@ class UsuarioService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/UsuarioService/ListUsuarios',
+            '/grpcpb2.UsuarioService/ListUsuarios',
             empty__pb2.Empty.SerializeToString,
             usuario__pb2.UsuarioList.FromString,
             options,
@@ -302,7 +302,7 @@ class UsuarioService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/UsuarioService/Login',
+            '/grpcpb2.UsuarioService/Login',
             usuario__pb2.LoginRequest.SerializeToString,
             usuario__pb2.LoginResponse.FromString,
             options,

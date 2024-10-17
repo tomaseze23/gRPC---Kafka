@@ -3,10 +3,10 @@
 import grpc
 import warnings
 
-import empty_pb2 as empty__pb2
-import producto_pb2 as producto__pb2
+from grpcpb2 import empty_pb2 as empty__pb2
+from grpcpb2 import producto_pb2 as producto__pb2
 
-GRPC_GENERATED_VERSION = '1.66.1'
+GRPC_GENERATED_VERSION = '1.67.0'
 GRPC_VERSION = grpc.__version__
 _version_not_supported = False
 
@@ -37,27 +37,27 @@ class ProductoServiceStub(object):
             channel: A grpc.Channel.
         """
         self.CreateProducto = channel.unary_unary(
-                '/ProductoService/CreateProducto',
+                '/grpcpb2.ProductoService/CreateProducto',
                 request_serializer=producto__pb2.Producto.SerializeToString,
                 response_deserializer=producto__pb2.Producto.FromString,
                 _registered_method=True)
         self.GetProducto = channel.unary_unary(
-                '/ProductoService/GetProducto',
+                '/grpcpb2.ProductoService/GetProducto',
                 request_serializer=producto__pb2.Producto.SerializeToString,
                 response_deserializer=producto__pb2.Producto.FromString,
                 _registered_method=True)
         self.UpdateProducto = channel.unary_unary(
-                '/ProductoService/UpdateProducto',
+                '/grpcpb2.ProductoService/UpdateProducto',
                 request_serializer=producto__pb2.Producto.SerializeToString,
                 response_deserializer=producto__pb2.Producto.FromString,
                 _registered_method=True)
         self.DeleteProducto = channel.unary_unary(
-                '/ProductoService/DeleteProducto',
+                '/grpcpb2.ProductoService/DeleteProducto',
                 request_serializer=producto__pb2.Producto.SerializeToString,
                 response_deserializer=producto__pb2.Producto.FromString,
                 _registered_method=True)
         self.ListProductos = channel.unary_unary(
-                '/ProductoService/ListProductos',
+                '/grpcpb2.ProductoService/ListProductos',
                 request_serializer=empty__pb2.Empty.SerializeToString,
                 response_deserializer=producto__pb2.ProductoList.FromString,
                 _registered_method=True)
@@ -127,9 +127,9 @@ def add_ProductoServiceServicer_to_server(servicer, server):
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'ProductoService', rpc_method_handlers)
+            'grpcpb2.ProductoService', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
-    server.add_registered_method_handlers('ProductoService', rpc_method_handlers)
+    server.add_registered_method_handlers('grpcpb2.ProductoService', rpc_method_handlers)
 
 
  # This class is part of an EXPERIMENTAL API.
@@ -151,7 +151,7 @@ class ProductoService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/ProductoService/CreateProducto',
+            '/grpcpb2.ProductoService/CreateProducto',
             producto__pb2.Producto.SerializeToString,
             producto__pb2.Producto.FromString,
             options,
@@ -178,7 +178,7 @@ class ProductoService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/ProductoService/GetProducto',
+            '/grpcpb2.ProductoService/GetProducto',
             producto__pb2.Producto.SerializeToString,
             producto__pb2.Producto.FromString,
             options,
@@ -205,7 +205,7 @@ class ProductoService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/ProductoService/UpdateProducto',
+            '/grpcpb2.ProductoService/UpdateProducto',
             producto__pb2.Producto.SerializeToString,
             producto__pb2.Producto.FromString,
             options,
@@ -232,7 +232,7 @@ class ProductoService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/ProductoService/DeleteProducto',
+            '/grpcpb2.ProductoService/DeleteProducto',
             producto__pb2.Producto.SerializeToString,
             producto__pb2.Producto.FromString,
             options,
@@ -259,7 +259,7 @@ class ProductoService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/ProductoService/ListProductos',
+            '/grpcpb2.ProductoService/ListProductos',
             empty__pb2.Empty.SerializeToString,
             producto__pb2.ProductoList.FromString,
             options,

@@ -3,10 +3,10 @@
 import grpc
 import warnings
 
-import empty_pb2 as empty__pb2
-import tienda_pb2 as tienda__pb2
+from grpcpb2 import empty_pb2 as empty__pb2
+from grpcpb2 import tienda_pb2 as tienda__pb2
 
-GRPC_GENERATED_VERSION = '1.66.1'
+GRPC_GENERATED_VERSION = '1.67.0'
 GRPC_VERSION = grpc.__version__
 _version_not_supported = False
 
@@ -37,27 +37,27 @@ class TiendaServiceStub(object):
             channel: A grpc.Channel.
         """
         self.CreateTienda = channel.unary_unary(
-                '/TiendaService/CreateTienda',
+                '/grpcpb2.TiendaService/CreateTienda',
                 request_serializer=tienda__pb2.Tienda.SerializeToString,
                 response_deserializer=tienda__pb2.Tienda.FromString,
                 _registered_method=True)
         self.GetTienda = channel.unary_unary(
-                '/TiendaService/GetTienda',
+                '/grpcpb2.TiendaService/GetTienda',
                 request_serializer=tienda__pb2.Tienda.SerializeToString,
                 response_deserializer=tienda__pb2.Tienda.FromString,
                 _registered_method=True)
         self.UpdateTienda = channel.unary_unary(
-                '/TiendaService/UpdateTienda',
+                '/grpcpb2.TiendaService/UpdateTienda',
                 request_serializer=tienda__pb2.Tienda.SerializeToString,
                 response_deserializer=tienda__pb2.Tienda.FromString,
                 _registered_method=True)
         self.DeleteTienda = channel.unary_unary(
-                '/TiendaService/DeleteTienda',
+                '/grpcpb2.TiendaService/DeleteTienda',
                 request_serializer=tienda__pb2.Tienda.SerializeToString,
                 response_deserializer=tienda__pb2.Tienda.FromString,
                 _registered_method=True)
         self.ListTiendas = channel.unary_unary(
-                '/TiendaService/ListTiendas',
+                '/grpcpb2.TiendaService/ListTiendas',
                 request_serializer=empty__pb2.Empty.SerializeToString,
                 response_deserializer=tienda__pb2.TiendaList.FromString,
                 _registered_method=True)
@@ -127,9 +127,9 @@ def add_TiendaServiceServicer_to_server(servicer, server):
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'TiendaService', rpc_method_handlers)
+            'grpcpb2.TiendaService', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
-    server.add_registered_method_handlers('TiendaService', rpc_method_handlers)
+    server.add_registered_method_handlers('grpcpb2.TiendaService', rpc_method_handlers)
 
 
  # This class is part of an EXPERIMENTAL API.
@@ -151,7 +151,7 @@ class TiendaService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/TiendaService/CreateTienda',
+            '/grpcpb2.TiendaService/CreateTienda',
             tienda__pb2.Tienda.SerializeToString,
             tienda__pb2.Tienda.FromString,
             options,
@@ -178,7 +178,7 @@ class TiendaService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/TiendaService/GetTienda',
+            '/grpcpb2.TiendaService/GetTienda',
             tienda__pb2.Tienda.SerializeToString,
             tienda__pb2.Tienda.FromString,
             options,
@@ -205,7 +205,7 @@ class TiendaService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/TiendaService/UpdateTienda',
+            '/grpcpb2.TiendaService/UpdateTienda',
             tienda__pb2.Tienda.SerializeToString,
             tienda__pb2.Tienda.FromString,
             options,
@@ -232,7 +232,7 @@ class TiendaService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/TiendaService/DeleteTienda',
+            '/grpcpb2.TiendaService/DeleteTienda',
             tienda__pb2.Tienda.SerializeToString,
             tienda__pb2.Tienda.FromString,
             options,
@@ -259,7 +259,7 @@ class TiendaService(object):
         return grpc.experimental.unary_unary(
             request,
             target,
-            '/TiendaService/ListTiendas',
+            '/grpcpb2.TiendaService/ListTiendas',
             empty__pb2.Empty.SerializeToString,
             tienda__pb2.TiendaList.FromString,
             options,

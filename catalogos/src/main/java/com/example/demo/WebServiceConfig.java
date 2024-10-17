@@ -100,4 +100,34 @@ public class WebServiceConfig extends WsConfigurerAdapter {
         return new SimpleXsdSchema(new ClassPathResource("catalogo_producto.xsd")); // Asegúrate de que el nombre del archivo sea correcto
     }
 
+    @Bean(name = "ordenCompra")
+    public DefaultWsdl11Definition defaultWsdl11DefinitionOrdenCompra(XsdSchema ordenCompraSchema) {
+        DefaultWsdl11Definition definition = new DefaultWsdl11Definition();
+        definition.setPortTypeName("OrdenCompraPort");
+        definition.setLocationUri("/ws/ordenesCompra");
+        definition.setTargetNamespace("http://www.example.com/ordenes_compra");
+        definition.setSchema(ordenCompraSchema);
+        return definition;
+    }
+
+    @Bean
+    public XsdSchema ordenCompraSchema() {
+        return new SimpleXsdSchema(new ClassPathResource("ordenes_compra.xsd"));
+    }
+
+    @Bean(name = "filtroUsuario")
+    public DefaultWsdl11Definition defaultWsdl11DefinitionFiltroUsuario(XsdSchema filtroUsuarioSchema) {
+        DefaultWsdl11Definition definition = new DefaultWsdl11Definition();
+        definition.setPortTypeName("FiltroUsuarioPort");
+        definition.setLocationUri("/ws/filtroUsuario");
+        definition.setTargetNamespace("http://www.example.com/filtroUsuario");
+        definition.setSchema(filtroUsuarioSchema);
+        return definition;
+    }
+
+    @Bean
+    public XsdSchema filtroUsuarioSchema() {
+        return new SimpleXsdSchema(new ClassPathResource("filtroUsuario.xsd"));
+    }   
+
 }

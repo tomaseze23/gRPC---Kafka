@@ -10,6 +10,7 @@ services:
       POSTGRES_DB: stockearte_db
     ports:
       - "8001:5432"
+
   pgadmin:
     container_name: pgadmin4_container
     image: dpage/pgadmin4
@@ -19,3 +20,17 @@ services:
       PGADMIN_DEFAULT_PASSWORD: root
     ports:
       - "5050:80"
+
+  zookeeper:
+    image: wurstmeister/zookeeper
+    ports:
+      - "2181:2181"
+
+  kafka:
+    image: wurstmeister/kafka
+    ports:
+      - "9092:9092"
+    environment:
+      KAFKA_ADVERTISED_HOST_NAME: 127.0.0.1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_CREATE_TOPICS: "novedad:1:1,solicitudes:1:1,recepcion:1:1,despacho:1:1,orden-de-compra:1:1"

@@ -89,7 +89,6 @@ class ProductoService(producto_pb2_grpc.ProductoServiceServicer):
         self.db_session.add(nuevo_producto)
         self.db_session.commit()
 
-        # Enviar mensaje a Kafka
         self.enviar_mensaje_kafka(nuevo_producto.id, codigo, talle, color, foto)
 
         return nuevo_producto.id

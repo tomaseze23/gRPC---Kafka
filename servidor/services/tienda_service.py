@@ -17,13 +17,10 @@ class TiendaService(tienda_pb2_grpc.TiendaServiceServicer):
             habilitada=request.habilitada
         )
         
-        # Añadir la nueva tienda a la sesión
         self.db_session.add(nueva_tienda)
         
-        # Guardar los cambios en la base de datos
         self.db_session.commit()
         
-        # Guardar la relación con los productos
         for producto_id in request.producto_ids:
             tienda_producto = ProductoTienda(tienda_codigo=request.codigo, producto_id=producto_id)
             self.db_session.add(tienda_producto)
@@ -75,7 +72,6 @@ class TiendaService(tienda_pb2_grpc.TiendaServiceServicer):
     def ListTiendas(self, request, context):
         tiendas = self.db_session.query(Tienda).all()
         
-        # Aquí también necesitarías implementar la lógica para obtener los productos relacionados
         tiendas_list = [
             tienda_pb2.Tienda(
                 codigo=tienda.codigo,
@@ -83,7 +79,7 @@ class TiendaService(tienda_pb2_grpc.TiendaServiceServicer):
                 ciudad=tienda.ciudad,
                 provincia=tienda.provincia,
                 habilitada=tienda.habilitada,
-                producto_ids=[]  # Debes implementar la lógica para obtener los productos relacionados
+                producto_ids=[]  
             ) for tienda in tiendas
         ]
         

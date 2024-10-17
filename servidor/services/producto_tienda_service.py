@@ -1,7 +1,7 @@
 from grpcpb2 import producto_tienda_pb2
 from grpcpb2 import producto_tienda_pb2_grpc
 from sqlalchemy.orm import Session
-from models import ProductoTienda  # Asegúrate de que tu modelo esté importado correctamente
+from models import ProductoTienda  
 
 class ProductoTiendaService(producto_tienda_pb2_grpc.ProductoTiendaServiceServicer):
     def __init__(self, db_session: Session):

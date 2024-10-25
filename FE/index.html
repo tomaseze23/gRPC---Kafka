@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Compras</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Enlace al archivo CSS -->
+</head>
+<body>
+    <h1>Catálogo de Compras</h1>
+
+    <div id="buttonContainer">
+        <button id="toggleTablaButton" onclick="toggleTabla()">Mostrar Tabla Productos</button>
+        <button onclick="mostrarFormulario()">Agregar Producto</button>
+        <button onclick="agregarTienda()">Agregar Tienda</button>
+    </div>
+
+    <div id="formulario" style="display:none;">
+
+        <label for="codigo" style="display: none;">Código:</label>
+        <input type="text" id="codigo" readonly>
+		
+        <label for="producto">Producto:</label>
+        <input type="text" id="producto" required>
+        
+        <label for="tipoProducto">Tipo de Producto:</label>
+        <select id="tipoProducto" onchange="updateProductCode()" required>
+            <option value="">Seleccionar</option>
+            <option value="Remera">Remera</option>
+            <option value="Pantalon">Pantalón</option>
+            <option value="Calzado">Calzado</option>
+        </select>
+        
+        <label for="talle">Talle:</label>
+        <select id="talle" required>
+            
+        </select>
+
+        <label for="color">Color:</label>
+		<div class="custom-select">
+			<select id="color">
+				<option value="0">--Selecciona un color--</option>
+				<option value="#FF0000">Rojo</option>
+				<option value="#000000">Negro</option>
+				<option value="#FFFFFF">Blanco</option>
+				<option value="#0000FF">Azul</option>
+				<option value="#008000">Verde</option>
+				<option value="#FFFF00">Amarillo</option>
+			</select>
+		</div>
+		<div id="colorSeleccionado" style="width: 50px; height: 50px; border: 1px solid black;"></div>
+
+
+        <label for="cantidad">Cantidad:</label>
+        <input type="number" id="cantidad" min="1" value="1" required oninput="validarCero(this)">
+        
+        <label for="precio">Precio:</label>
+        <input type="number" id="precio" required placeholder="1,00" step="0.01" value="1,00" required oninput="validarCero(this)">
+        
+        <label for="tienda">Tienda:</label>
+        <select id="tienda" required>
+            <option value="">Seleccionar Tienda</option>
+        </select>
+
+        <label for="imagen">Imagen del producto:</label>
+        <input type="file" id="imagen" accept="image/*" required>
+
+        <button onclick="agregarProducto()">Agregar</button>
+        <button onclick="cerrarFormulario()">Cerrar</button>
+    </div>
+
+    <table id="tablaProductos" style="display:none;">
+        <thead>
+            <tr>
+                <th style="width: 5%;">Código</th>
+                <th style="width: 15%;">Producto</th>
+                <th style="width: 10%;">Tipo</th>
+                <th style="width: 5%;">Talle</th>
+                <th style="width: 5%;">Cantidad</th>
+                <th style="width: 5%;">Precio</th>
+                <th style="width: 10%;">Tienda</th>
+                <th style="width: 5%;">Color</th>
+                <th style="width: 15%;">Imagen</th>
+                <th style="width: 10%;">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+
+    <div id="filtroContainer">
+    <label for="filtroTienda">Seleccionar Tienda:</label>
+    <select id="filtroTienda" onchange="aplicarFiltros()">
+        <option value="">Mostrar todas</option>
+        <!-- Opciones de tienda -->
+    </select>
+
+    <label for="filtroTipoProducto" style="margin-left: 10px;">Tipo de Producto:</label>
+    <select id="filtroTipoProducto" onchange="aplicarFiltros()">
+        <option value="">Mostrar todos</option>
+        <option value="remeras">Remera</option>
+        <option value="pantalon">Pantalon</option>
+        <option value="calzado">Calzado</option>
+        <!-- Otros tipos de productos -->
+    </select>
+
+    <label for="precioMinimo" style="margin-left: 10px;">Mínimo:</label>
+    <input type="number" id="precioMinimo" step="0.01" oninput="aplicarFiltros()">
+
+    <label for="precioMaximo" style="margin-left: 10px;">Máximo:</label>
+    <input type="number" id="precioMaximo" step="0.01" oninput="aplicarFiltros()">
+</div>
+
+	
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+	
+    <script src="script.js"></script> 
+</body>
+</html>

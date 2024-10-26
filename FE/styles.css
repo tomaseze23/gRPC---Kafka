@@ -1,0 +1,161 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f4f4f4;
+}
+
+h1 {
+    text-align: center;
+}
+
+#buttonContainer {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+#formulario {
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ccc;
+    background: #fff;
+    border-radius: 5px;
+    width: 300px;
+}
+
+label {
+    display: block;
+    margin: 10px 0 5px;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="file"],
+select {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+#filtroContainer {
+    margin: 20px 0;
+}
+
+#colorOptions {
+    display: flex;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+}
+
+.colorOption {
+    width: 50px;
+    height: 50px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-right: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff; /* Color del texto para mejor visibilidad */
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.colorOption:hover {
+    border: 2px solid #000; 
+}
+
+/*Ocultar el box del codigo en el "agregarProducto(), es la unica forma que encontre: */
+
+#codigo {
+    display: none; 
+}
+
+
+
+.custom-select {
+    position: relative;
+    display: inline-block;
+    width: 200px;
+}
+
+.select-selected {
+    background-color: #f1f1f1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+}
+
+.select-items {
+    position: absolute;
+    background-color: #f1f1f1;
+    border: 1px solid #ccc;
+    z-index: 99;
+    width: 100%;
+    display: none; 
+}
+
+.select-items div {
+    padding: 10px;
+    cursor: pointer;
+    display: flex; 
+    /align-items: center;
+}
+
+.select-items div:hover {
+    background-color: #ddd;
+}
+
+.select-hide {
+    display: none;
+}
+
+/* Filtros */
+
+#filtroContainer {
+    display: flex;
+    align-items: center; /* Centra los elementos verticalmente */
+    gap: 25px; /* Ajusta el espacio entre los elementos */
+    flex-wrap: nowrap;
+    margin-bottom: 25px;
+}
+
+#filtroContainer label, 
+#filtroContainer select, 
+#filtroContainer input {
+    display: flex;
+    align-items: center; /* Centra el contenido en cada elemento */
+}
+
+#filtroContainer label {
+    margin-right: 5px;
+    white-space: nowrap;
+    font-size: 14px;
+}
+
+#filtroContainer select, #filtroContainer input {
+    height: 25px;
+    padding: 0 7px;
+    font-size: 14px;
+    margin: 0;
+	
+	
+}

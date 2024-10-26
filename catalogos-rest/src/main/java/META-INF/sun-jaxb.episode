@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<bindings xmlns="https://jakarta.ee/xml/ns/jaxb" if-exists="true" version="3.0">
+      
+    <!--
+
+Este archivo ha sido generado por Eclipse Implementation of JAXB v4.0.2 
+Visite https://eclipse-ee4j.github.io/jaxb-ri 
+Todas las modificaciones realizadas en este archivo se perderán si se vuelve a compilar el esquema de origen. 
+Generado el: 2024.10.25 a las 10:41:12 PM UYT
+  -->
+      
+    <bindings xmlns:tns="http://www.example.com/usuarios" if-exists="true" scd="x-schema::tns">
+            
+        <schemaBindings map="false">
+                  
+            <package name="com.example.demo.wsdl.usuario"/>
+                
+        </schemaBindings>
+            
+        <bindings if-exists="true" scd="tns:getUsuarioRequest">
+                  
+            <class ref="com.example.demo.wsdl.usuario.GetUsuarioRequest"/>
+                
+        </bindings>
+            
+        <bindings if-exists="true" scd="tns:getUsuarioResponse">
+                  
+            <class ref="com.example.demo.wsdl.usuario.GetUsuarioResponse"/>
+                
+        </bindings>
+            
+        <bindings if-exists="true" scd="~tns:usuario">
+                  
+            <class ref="com.example.demo.wsdl.usuario.Usuario"/>
+                
+        </bindings>
+            
+        <bindings if-exists="true" scd="tns:getAllUsuariosRequest">
+                  
+            <class ref="com.example.demo.wsdl.usuario.GetAllUsuariosRequest"/>
+                
+        </bindings>
+            
+        <bindings if-exists="true" scd="tns:getAllUsuariosResponse">
+                  
+            <class ref="com.example.demo.wsdl.usuario.GetAllUsuariosResponse"/>
+                
+        </bindings>
+            
+        <bindings if-exists="true" scd="~tns:Usuarios">
+                  
+            <class ref="com.example.demo.wsdl.usuario.Usuarios"/>
+                
+        </bindings>
+            
+        <bindings if-exists="true" scd="tns:createUsuarioRequest">
+                  
+            <class ref="com.example.demo.wsdl.usuario.CreateUsuarioRequest"/>
+                
+        </bindings>
+            
+        <bindings if-exists="true" scd="tns:createUsuarioResponse">
+                  
+            <class ref="com.example.demo.wsdl.usuario.CreateUsuarioResponse"/>
+                
+        </bindings>
+          
+    </bindings>
+    
+</bindings>

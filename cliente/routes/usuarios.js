@@ -51,21 +51,20 @@ router.post("/login", express.urlencoded({ extended: true }), (req, res) => {
     contrasena,
   };
 
-  usuarioClient.GetUsuario(usuarioRequest, (error, response) => {
+  console.log("UsuarioRequest:", usuarioRequest);
+  
+  usuarioClient.Login(usuarioRequest, (error, response) => {
+    console.log("Response:", response);
+  
     if (error) {
       console.error("Error:", error);
       res.render("index", {
         message: "Error: " + error.message,
       });
-    } else if (
-      response &&
-      response.nombreUsuario === nombreUsuario &&
-      response.contrasena === contrasena
-    ) {
+    } else if (response && response.success) {
       console.log("Login exitoso");
-      req.session.isAuthenticated = true; 
+      req.session.isAuthenticated = true;
       req.session.save(() => {
-        
         res.redirect("/home");
       });
     } else {
@@ -75,6 +74,7 @@ router.post("/login", express.urlencoded({ extended: true }), (req, res) => {
       });
     }
   });
+  
 });
 
 
@@ -117,6 +117,7 @@ router.put(
   express.json(),
   checkAuthentication,
   (req, res) => {
+    console.log("Se va a actualizar el usuario con id:", req.params.id);
     const usuario = {
       id: parseInt(req.params.id), 
       nombreUsuario: req.body.nombreUsuario ?? "",
@@ -152,7 +153,9 @@ router.delete("/deleteUsuario/:id", checkAuthentication, (req, res) => {
 
 
 router.get("/listUsuarios", checkAuthentication, (req, res) => {
-  usuarioClient.ListUsuarios({}, (error, response) => {
+  console.log("Vamos a buscar a todos los usuarios");
+  usuarioClient.ListUsuarios({solo_habilitados: true}, (error, response) => {
+    console.log("Response:", response);
     if (error) {
       console.error("Error al obtener usuarios:", error);
       return res.status(500).json({

@@ -111,6 +111,7 @@ router.delete(
 
 router.get("/listTiendas", (req, res) => {
   tiendaClient.ListTiendas({}, (error, response) => {
+    console.log("response: ", response)
     if (error) {
       console.error("Error:", error);
       res.status(500).json({ error: error.message });

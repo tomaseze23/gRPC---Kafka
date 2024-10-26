@@ -7,6 +7,8 @@ const tiendaRoutes = require('./routes/tiendas');
 const ordenDeCompraRoutes = require('./routes/ordenDeCompra'); 
 const { run: runKafkaConsumer } = require('./kafka/kafka-consumer'); 
 
+
+
 const app = express();
 const port = 3000;
 

@@ -111,6 +111,7 @@ class ProductosComponent extends LitElement {
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
+      debugger
       this.productos = (await response.json())?.productos;
     } catch (error) {
       console.error("Error al cargar los productos:", error);
@@ -289,7 +290,7 @@ class ProductosComponent extends LitElement {
                                 (this.editProducto.tienda_ids =
                                   e.target.value.split(", "))}
                             ></textarea>`
-                          : producto.tienda_ids.join(", ")}
+                          : producto?.tienda_ids?.join(", ")}
                       </td>
                       <td>
                         ${this.editIndex === index

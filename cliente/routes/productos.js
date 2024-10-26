@@ -90,7 +90,9 @@ console.log(req.params.id)
 
 
 router.get("/listProductos", (req, res) => {
+  console.log("listar productos")
   productoClient.ListProductos({}, (error, response) => {
+    console.log("response: ", response)
     if (error) {
       console.error("Error:", error);
       return res

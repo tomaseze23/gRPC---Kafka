@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package tienda;
+
+message Tienda {
+    string codigo = 1;
+    string direccion = 2;
+    string ciudad = 3;
+    string provincia = 4;
+    bool habilitada = 5;
+    repeated int64 producto_ids = 6;
+}
+
+message TiendaList {
+    repeated Tienda tiendas = 1;
+}
+
+message ListTiendasRequest {
+    bool solo_habilitadas = 1;
+}
+
+service TiendaService {
+    rpc CreateTienda(Tienda) returns (Tienda);
+    rpc GetTienda(Tienda) returns (Tienda);
+    rpc UpdateTienda(Tienda) returns (Tienda);
+    rpc DeleteTienda(Tienda) returns (Tienda);
+    rpc ListTiendas(ListTiendasRequest) returns (TiendaList);
+}

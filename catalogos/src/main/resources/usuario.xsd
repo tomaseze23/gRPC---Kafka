@@ -1,0 +1,82 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+    xmlns:tns="http://www.example.com/usuarios"
+    targetNamespace="http://www.example.com/usuarios"
+    elementFormDefault="qualified">
+
+    <!-- Definición del tipo complejo "usuario" -->
+    <xs:complexType name="usuario">
+        <xs:sequence>
+            <xs:element name="id" type="xs:long" />
+            <xs:element name="nombre_usuario" type="xs:string" />
+            <xs:element name="contrasena" type="xs:string" />
+            <xs:element name="tienda_id" type="xs:string" minOccurs="0" />
+            <xs:element name="nombre" type="xs:string" />
+            <xs:element name="apellido" type="xs:string" />
+            <xs:element name="habilitado" type="xs:boolean" minOccurs="0" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- Solicitud para obtener un usuario específico -->
+    <xs:element name="getUsuarioRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="nombre_usuario" type="xs:string" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Respuesta para obtener un usuario específico -->
+    <xs:element name="getUsuarioResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="usuario" type="tns:usuario" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Solicitud para obtener todos los usuarios -->
+    <xs:element name="getAllUsuariosRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <!-- Puedes agregar parámetros de filtrado aquí si es necesario -->
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Respuesta para obtener todos los usuarios -->
+    <xs:element name="getAllUsuariosResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="usuarios" type="tns:Usuarios" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Definición del tipo complejo "Usuarios" que contiene una lista de "usuario" -->
+    <xs:complexType name="Usuarios">
+        <xs:sequence>
+            <xs:element name="usuario" type="tns:usuario" maxOccurs="unbounded" />
+        </xs:sequence>
+    </xs:complexType>
+
+    <!-- Solicitud para crear un nuevo usuario -->
+    <xs:element name="createUsuarioRequest">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="usuario" type="tns:usuario" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <!-- Respuesta para crear un nuevo usuario -->
+    <xs:element name="createUsuarioResponse">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="usuarioCreado" type="tns:usuario" />
+                <!-- Opcionalmente, puedes agregar un mensaje o un código de estado -->
+                <xs:element name="mensaje" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+</xs:schema>

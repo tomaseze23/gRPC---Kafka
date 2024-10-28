@@ -1,5 +1,7 @@
 package com.example.demo.services;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ws.server.endpoint.annotation.Endpoint;
 import org.springframework.ws.server.endpoint.annotation.PayloadRoot;
@@ -8,7 +10,9 @@ import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 
 import com.example.demo.models.Tienda;
 import com.example.demo.repository.TiendaRepository;
-import com.example.tiendas.GetTiendaRequest;  // Asegúrate de que esta clase exista
+import com.example.tiendas.GetAllTiendasRequest;
+import com.example.tiendas.GetAllTiendasResponse;
+import com.example.tiendas.GetTiendaRequest; // Asegúrate de que esta clase exista
 import com.example.tiendas.GetTiendaResponse; // Asegúrate de que esta clase exista
 
 @Endpoint
@@ -35,4 +39,23 @@ public class TiendaEndpoint {
         }
         return response;
     }
+
+    @PayloadRoot(namespace = NAMESPACE_URI, localPart = "getAllTiendasRequest")
+    @ResponsePayload
+    public GetAllTiendasResponse getAllTiendas(@RequestPayload GetAllTiendasRequest request) {
+        GetAllTiendasResponse response = new GetAllTiendasResponse();
+        List<Tienda> tiendas = tiendaRepository.findAll();
+
+        for (Tienda tienda : tiendas) {
+            com.example.tiendas.Tienda tiendaResponse = new com.example.tiendas.Tienda();
+            tiendaResponse.setCodigo(tienda.getCodigo());
+            tiendaResponse.setDireccion(tienda.getDireccion());
+            tiendaResponse.setCiudad(tienda.getCiudad());
+            tiendaResponse.setProvincia(tienda.getProvincia());
+            tiendaResponse.setHabilitada(tienda.isHabilitada());
+            response.getTiendas().add(tiendaResponse);
+        }
+        return response;
+    }
+
 }

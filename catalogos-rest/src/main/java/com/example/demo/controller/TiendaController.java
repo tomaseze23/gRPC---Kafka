@@ -6,6 +6,10 @@ import com.example.demo.service.TiendaService;
 import com.example.demo.wsdl.tienda.Tienda;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -41,6 +45,20 @@ public class TiendaController {
         dto.setProvincia(entity.getProvincia());
         dto.setHabilitada(entity.isHabilitada());
         return dto;
+    }
+
+    @Operation(summary = "Obtener todas las tiendas", description = "Obtiene una lista de todas las tiendas")
+    @GetMapping
+    public ResponseEntity<List<TiendaDTO>> getAllTiendas() {
+        List<Tienda> tiendas = tiendaService.getAllTiendas();
+        if (tiendas != null && !tiendas.isEmpty()) {
+            List<TiendaDTO> tiendaDTOs = tiendas.stream()
+                    .map(this::mapEntityToDto)
+                    .collect(Collectors.toList());
+            return ResponseEntity.ok(tiendaDTOs);
+        } else {
+            return ResponseEntity.noContent().build();
+        }
     }
 
     private Tienda mapDtoToEntity(TiendaDTO dto) {

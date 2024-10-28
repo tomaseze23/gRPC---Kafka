@@ -65,4 +65,24 @@ public class ObjectFactory {
         return new Tienda();
     }
 
+    /**
+     * Create an instance of {@link GetAllTiendasRequest }
+     * 
+     * @return
+     *     the new instance of {@link GetAllTiendasRequest }
+     */
+    public GetAllTiendasRequest createGetAllTiendasRequest() {
+        return new GetAllTiendasRequest();
+    }
+
+    /**
+     * Create an instance of {@link GetAllTiendasResponse }
+     * 
+     * @return
+     *     the new instance of {@link GetAllTiendasResponse }
+     */
+    public GetAllTiendasResponse createGetAllTiendasResponse() {
+        return new GetAllTiendasResponse();
+    }
+
 }

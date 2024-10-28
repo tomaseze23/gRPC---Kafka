@@ -13,11 +13,12 @@ import com.example.ordenes_compra.GetOrdenCompraRequest;
 import com.example.ordenes_compra.GetOrdenCompraResponse;
 import com.example.ordenes_compra.GetAllOrdenesCompraRequest;
 
-
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Optional;
 
@@ -93,8 +94,11 @@ public class OrdenCompraEndpoint {
             if (dateTime == null) {
                 return null;
             }
-            return DatatypeFactory.newInstance()
-                    .newXMLGregorianCalendar(dateTime.atZoneSameInstant(ZoneId.systemDefault()).toString());
+            ZonedDateTime zonedDateTime = dateTime.atZoneSameInstant(ZoneId.systemDefault());
+
+            GregorianCalendar gregorianCalendar = GregorianCalendar.from(zonedDateTime);
+
+            return DatatypeFactory.newInstance().newXMLGregorianCalendar(gregorianCalendar);
         } catch (Exception e) {
             e.printStackTrace();
             return null;

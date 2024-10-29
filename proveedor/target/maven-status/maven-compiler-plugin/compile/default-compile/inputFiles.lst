@@ -1,5 +1,10 @@
-C:\Users\amans\OneDrive\Documentos\distribuidos\gRPC---Kafka\proveedor\src\main\java\proveedor\controller\KafkaController.java
-C:\Users\amans\OneDrive\Documentos\distribuidos\gRPC---Kafka\proveedor\src\main\java\proveedor\DemoApplication.java
+C:\Users\amans\OneDrive\Documentos\distribuidos\gRPC---Kafka\proveedor\src\main\java\proveedor\controller\OrdenDeCompraController.java
+C:\Users\amans\OneDrive\Documentos\distribuidos\gRPC---Kafka\proveedor\src\main\java\proveedor\controller\ProductoController.java
+C:\Users\amans\OneDrive\Documentos\distribuidos\gRPC---Kafka\proveedor\src\main\java\proveedor\dto\ItemOrdenCompraDTO.java
+C:\Users\amans\OneDrive\Documentos\distribuidos\gRPC---Kafka\proveedor\src\main\java\proveedor\dto\OrdenCompraDTO.java
+C:\Users\amans\OneDrive\Documentos\distribuidos\gRPC---Kafka\proveedor\src\main\java\proveedor\dto\OrdenRecibidaDTO.java
+C:\Users\amans\OneDrive\Documentos\distribuidos\gRPC---Kafka\proveedor\src\main\java\proveedor\dto\ProductoDTO.java
+C:\Users\amans\OneDrive\Documentos\distribuidos\gRPC---Kafka\proveedor\src\main\java\proveedor\kafka\KafkaConsumer.java
 C:\Users\amans\OneDrive\Documentos\distribuidos\gRPC---Kafka\proveedor\src\main\java\proveedor\models\Catalogo.java
 C:\Users\amans\OneDrive\Documentos\distribuidos\gRPC---Kafka\proveedor\src\main\java\proveedor\models\CatalogoProducto.java
 C:\Users\amans\OneDrive\Documentos\distribuidos\gRPC---Kafka\proveedor\src\main\java\proveedor\models\ItemOrdenCompra.java
@@ -9,6 +14,7 @@ C:\Users\amans\OneDrive\Documentos\distribuidos\gRPC---Kafka\proveedor\src\main\
 C:\Users\amans\OneDrive\Documentos\distribuidos\gRPC---Kafka\proveedor\src\main\java\proveedor\models\ProductoTienda.java
 C:\Users\amans\OneDrive\Documentos\distribuidos\gRPC---Kafka\proveedor\src\main\java\proveedor\models\Tienda.java
 C:\Users\amans\OneDrive\Documentos\distribuidos\gRPC---Kafka\proveedor\src\main\java\proveedor\models\Usuario.java
+C:\Users\amans\OneDrive\Documentos\distribuidos\gRPC---Kafka\proveedor\src\main\java\proveedor\ProveedorApplication.java
 C:\Users\amans\OneDrive\Documentos\distribuidos\gRPC---Kafka\proveedor\src\main\java\proveedor\repository\CatalogoProductoRepository.java
 C:\Users\amans\OneDrive\Documentos\distribuidos\gRPC---Kafka\proveedor\src\main\java\proveedor\repository\CatalogoRepository.java
 C:\Users\amans\OneDrive\Documentos\distribuidos\gRPC---Kafka\proveedor\src\main\java\proveedor\repository\ItemOrdenCompraRepository.java
@@ -19,3 +25,5 @@ C:\Users\amans\OneDrive\Documentos\distribuidos\gRPC---Kafka\proveedor\src\main\
 C:\Users\amans\OneDrive\Documentos\distribuidos\gRPC---Kafka\proveedor\src\main\java\proveedor\repository\TiendaRepository.java
 C:\Users\amans\OneDrive\Documentos\distribuidos\gRPC---Kafka\proveedor\src\main\java\proveedor\repository\UsuarioRepository.java
 C:\Users\amans\OneDrive\Documentos\distribuidos\gRPC---Kafka\proveedor\src\main\java\proveedor\service\KafkaProducerService.java
+C:\Users\amans\OneDrive\Documentos\distribuidos\gRPC---Kafka\proveedor\src\main\java\proveedor\service\OrdenDeCompraService.java
+C:\Users\amans\OneDrive\Documentos\distribuidos\gRPC---Kafka\proveedor\src\main\java\proveedor\service\ProductoService.java

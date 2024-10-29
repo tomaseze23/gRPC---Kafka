@@ -31,11 +31,11 @@ const productoProto = protoDescriptorProducto.ProductoService;
 const tiendaProto = protoDescriptorTienda.TiendaService;
 const productoTiendaProto = protoDescriptorProductoTienda.ProductoTiendaService;
 
-const greeterClient = new greeterProto('localhost:50051', grpc.credentials.createInsecure());
-const usuarioClient = new usuarioProto('localhost:50051', grpc.credentials.createInsecure());
-const productoClient = new productoProto('localhost:50051', grpc.credentials.createInsecure());
-const tiendaClient = new tiendaProto('localhost:50051', grpc.credentials.createInsecure());
-const productoTiendaClient = new productoTiendaProto('localhost:50051', grpc.credentials.createInsecure());
+const greeterClient = new greeterProto('localhost:9090', grpc.credentials.createInsecure());
+const usuarioClient = new usuarioProto('localhost:9090', grpc.credentials.createInsecure());
+const productoClient = new productoProto('localhost:9090', grpc.credentials.createInsecure());
+const tiendaClient = new tiendaProto('localhost:9090', grpc.credentials.createInsecure());
+const productoTiendaClient = new productoTiendaProto('localhost:9090', grpc.credentials.createInsecure());
 
 module.exports = {
   greeterClient,

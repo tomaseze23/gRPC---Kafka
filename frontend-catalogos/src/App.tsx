@@ -1,8 +1,8 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Layout } from './components/Layout';
-import { PurchaseOrders } from './pages/PurchaseOrders';
-import { Catalogs } from './pages/Catalogs';
+import { OrdenesDeCompra } from './pages/OrdenesDeCompra';
+import { Catalogos } from './pages/Catalogos';
 import { UserUpload } from './pages/UserUpload';
 
 function App() {
@@ -10,9 +10,9 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Layout />}>
-          <Route index element={<Navigate to="/purchase-orders" replace />} />
-          <Route path="purchase-orders" element={<PurchaseOrders />} />
-          <Route path="catalogs" element={<Catalogs />} />
+          <Route index element={<Navigate to="/ordenes-de-compra" replace />} />
+          <Route path="ordenes-de-compra" element={<OrdenesDeCompra />} />
+          <Route path="catalogos" element={<Catalogos />} />
           <Route path="carga-masiva" element={<UserUpload />} />
         </Route>
       </Routes>

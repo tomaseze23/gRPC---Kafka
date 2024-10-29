@@ -78,7 +78,6 @@ public class UsuarioController {
      */
     private Usuario mapDtoToUsuario(UsuarioDTO dto) {
         Usuario usuario = new Usuario();
-        usuario.setId(dto.getId());
         usuario.setNombreUsuario(dto.getNombreUsuario());
         usuario.setContrasena(dto.getContrasena()); // Asegúrate de hashear la contraseña antes de enviar
         usuario.setTiendaId(dto.getTiendaId());
@@ -93,7 +92,6 @@ public class UsuarioController {
      */
     private UsuarioDTO mapUsuarioToDto(Usuario usuario) {
         UsuarioDTO dto = new UsuarioDTO();
-        dto.setId(usuario.getId());
         dto.setNombreUsuario(usuario.getNombreUsuario());
         dto.setContrasena(usuario.getContrasena());
         dto.setTiendaId(usuario.getTiendaId());
@@ -104,9 +102,11 @@ public class UsuarioController {
     }
 
     @PostMapping("/carga-masiva")
-    public ResponseEntity<Map<String, Object>> cargaMasivaUsuarios(@RequestBody MultipartFile file) {
-        Map<String, Object> result = usuarioService.procesarCargaMasiva(file);
+    public ResponseEntity<Map<String, Object>> cargaMasivaUsuarios(@RequestBody List<UsuarioDTO> usuariosDTO) {
+        System.out.println("Recibidos: " + usuariosDTO);
+        Map<String, Object> result = usuarioService.procesarCargaMasiva(usuariosDTO);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+    
 
 }

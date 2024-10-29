@@ -8,6 +8,7 @@ import org.springframework.ws.server.endpoint.annotation.ResponsePayload;
 
 import com.example.demo.models.Tienda;
 import com.example.demo.models.Usuario;
+import com.example.demo.repository.TiendaRepository;
 import com.example.demo.repository.UsuarioRepository;
 import com.example.usuarios.CreateUsuarioRequest;
 import com.example.usuarios.CreateUsuarioResponse;
@@ -26,6 +27,9 @@ public class UsuarioEndpoint {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private TiendaRepository tiendaRepository;
 
     /**
      * Operación para obtener un usuario específico por nombre de usuario.
@@ -72,22 +76,18 @@ public class UsuarioEndpoint {
     public CreateUsuarioResponse createUsuario(@RequestPayload CreateUsuarioRequest request) {
         CreateUsuarioResponse response = new CreateUsuarioResponse();
 
-        // Mapear la solicitud a la entidad Usuario
+        System.out.println("PASO POR ACAAAAAAAAAAAAAAAAAAAAAAAAA");
+
         Usuario usuario = new Usuario();
         usuario.setNombreUsuario(request.getUsuario().getNombreUsuario());
         usuario.setContrasena(request.getUsuario().getContrasena());
         usuario.setNombre(request.getUsuario().getNombre());
         usuario.setApellido(request.getUsuario().getApellido());
-        usuario.setHabilitado(request.getUsuario().isHabilitado());
+        usuario.setHabilitado(true);
 
-        // Manejar la asociación con Tienda si se proporciona
         if (request.getUsuario().getTiendaId() != null && !request.getUsuario().getTiendaId().isEmpty()) {
-            // Supone que tienes un TiendaRepository para buscar la tienda por código
-            // Asegúrate de inyectar TiendaRepository y manejar posibles excepciones
-            // Ejemplo:
-            // Tienda tienda = tiendaRepository.findByCodigo(request.getUsuario().getTiendaId()).orElse(null);
-            // usuario.setTienda(tienda);
-            // Por simplicidad, este código está omitido aquí
+            Tienda tienda = tiendaRepository.findByCodigo(request.getUsuario().getTiendaId()).orElse(null);
+            usuario.setTienda(tienda);
         }
 
         // Guardar el usuario en la base de datos
@@ -106,15 +106,13 @@ public class UsuarioEndpoint {
      */
     private com.example.usuarios.Usuario mapUsuarioToResponse(Usuario usuario) {
         com.example.usuarios.Usuario usuarioResponse = new com.example.usuarios.Usuario();
-        usuarioResponse.setId(usuario.getId());
         usuarioResponse.setNombreUsuario(usuario.getNombreUsuario());
         usuarioResponse.setContrasena(usuario.getContrasena());
         usuarioResponse.setNombre(usuario.getNombre());
         usuarioResponse.setApellido(usuario.getApellido());
-        usuarioResponse.setHabilitado(usuario.isHabilitado());
+        usuarioResponse.setHabilitado(true);
 
         if (usuario.getTienda() != null) {
-            // Supone que la clase TiendaResponse está generada y mapeada correctamente
             Tienda tiendaResponse = new Tienda();
             tiendaResponse.setCodigo(usuario.getTienda().getCodigo());
             tiendaResponse.setDireccion(usuario.getTienda().getDireccion());

@@ -1,8 +1,5 @@
-// src/main/java/com/example/demo/services/UsuarioService.java
 package com.example.demo.service;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -10,9 +7,9 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.clientes.UsuarioCliente;
+import com.example.demo.dto.UsuarioDTO;
 import com.example.demo.wsdl.tienda.Tienda;
 import com.example.demo.wsdl.usuario.CreateUsuarioResponse;
 import com.example.demo.wsdl.usuario.GetAllUsuariosResponse;
@@ -32,91 +29,82 @@ public class UsuarioService {
         return usuarioCliente.getUsuario(nombreUsuario);
     }
 
-  
     public GetAllUsuariosResponse obtenerTodosUsuarios() {
         return usuarioCliente.getAllUsuarios();
     }
 
-   
     public CreateUsuarioResponse crearUsuario(Usuario usuario) {
+        System.out.println("PASAMOS POR ACA");
         return usuarioCliente.createUsuario(usuario);
     }
 
-    public Map<String, Object> procesarCargaMasiva(MultipartFile file) {
-        List<String> errores = new ArrayList<>();
+    public Map<String, Object> procesarCargaMasiva(List<UsuarioDTO> usuariosDTO) {
+        List<Map<String, Object>> errores = new ArrayList<>();
         List<Usuario> usuariosParaCrear = new ArrayList<>();
         Map<String, Object> response = new HashMap<>();
 
-        try (BufferedReader br = new BufferedReader(new InputStreamReader(file.getInputStream()))) {
-            String linea;
-            int numeroLinea = 1;
+        int numeroLinea = 1;
 
-            while ((linea = br.readLine()) != null) {
-                String[] campos = linea.split(";");
+        for (UsuarioDTO usuarioDTO : usuariosDTO) {
+            System.out.println("Usuario " + usuarioDTO);
 
-                if (campos.length < 5 || tieneCamposVacios(campos)) {
-                    errores.add("Línea " + numeroLinea + ": Campos vacíos o incompletos.");
-                    continue;
-                }
+            List<String> erroresUsuario = new ArrayList<>();
 
-                String usuario = campos[0];
-                String contrasena = campos[1];
-                String nombre = campos[2];
-                String apellido = campos[3];
-                String codigoTienda = campos[4];
+            if (tieneCamposVacios(usuarioDTO)) {
+                erroresUsuario.add("Campos vacíos o incompletos.");
+            }
 
-                if (esUsuarioDuplicado(usuario)) {
-                    errores.add("Línea " + numeroLinea + ": Usuario duplicado.");
-                    continue;
-                }
+            if (esUsuarioDuplicado(usuarioDTO.getNombreUsuario())) {
+                erroresUsuario.add("Usuario duplicado.");
+            }
 
-                if (!existeTienda(codigoTienda)) {
-                    errores.add("Línea " + numeroLinea + ": Código de tienda no existe.");
-                    continue;
-                }
+            if (!existeTienda(usuarioDTO.getTiendaId())) {
+                erroresUsuario.add("Código de tienda no existe.");
+            }
 
-                if (!tiendaHabilitada(codigoTienda)) {
-                    errores.add("Línea " + numeroLinea + ": Tienda deshabilitada.");
-                    continue;
-                }
+            else if (!tiendaHabilitada(usuarioDTO.getTiendaId())) {
+                erroresUsuario.add("Tienda deshabilitada.");
+            }
 
+            if (!erroresUsuario.isEmpty()) {
+                Map<String, Object> errorDetalle = new HashMap<>();
+                errorDetalle.put("line", numeroLinea);
+                errorDetalle.put("message", String.join(" ", erroresUsuario));
+                errores.add(errorDetalle);
+            } else {
                 Usuario nuevoUsuario = new Usuario();
-                nuevoUsuario.setNombreUsuario(usuario);
-                nuevoUsuario.setContrasena(contrasena); // Hash según sea necesario
-                nuevoUsuario.setNombre(nombre);
-                nuevoUsuario.setApellido(apellido);
-                nuevoUsuario.setTiendaId(codigoTienda);
+                nuevoUsuario.setNombreUsuario(usuarioDTO.getNombreUsuario());
+                nuevoUsuario.setContrasena(usuarioDTO.getContrasena());
+                nuevoUsuario.setNombre(usuarioDTO.getNombre());
+                nuevoUsuario.setApellido(usuarioDTO.getApellido());
+                nuevoUsuario.setTiendaId(usuarioDTO.getTiendaId());
 
                 usuariosParaCrear.add(nuevoUsuario);
-                numeroLinea++;
             }
 
-            response.put("errores", errores);
+            numeroLinea++;
+        }
 
-            if (!usuariosParaCrear.isEmpty()) {
-                for (Usuario usuario : usuariosParaCrear) {
-                    crearUsuario(usuario);
-                }
-                response.put("mensaje", "Usuarios válidos creados exitosamente.");
-            } else {
-                response.put("mensaje", "No se creó ningún usuario.");
+        response.put("errors", errores);
+
+        if (!usuariosParaCrear.isEmpty()) {
+            for (Usuario usuario : usuariosParaCrear) {
+                crearUsuario(usuario);
             }
-
-        } catch (Exception e) {
-            response.put("mensaje", "Error al procesar el archivo CSV.");
-            response.put("errores", List.of(e.getMessage()));
+            response.put("message", "Usuarios válidos creados exitosamente.");
+        } else {
+            response.put("message", "No se creó ningún usuario.");
         }
 
         return response;
     }
 
-    private boolean tieneCamposVacios(String[] campos) {
-        for (String campo : campos) {
-            if (campo == null || campo.trim().isEmpty()) {
-                return true;
-            }
-        }
-        return false;
+    private boolean tieneCamposVacios(UsuarioDTO usuarioDTO) {
+        return usuarioDTO.getNombreUsuario() == null || usuarioDTO.getNombreUsuario().trim().isEmpty()
+                || usuarioDTO.getContrasena() == null || usuarioDTO.getContrasena().trim().isEmpty()
+                || usuarioDTO.getNombre() == null || usuarioDTO.getNombre().trim().isEmpty()
+                || usuarioDTO.getApellido() == null || usuarioDTO.getApellido().trim().isEmpty()
+                || (usuarioDTO.getTiendaId() != null && usuarioDTO.getTiendaId().trim().isEmpty());
     }
 
     private boolean esUsuarioDuplicado(String nombreUsuario) {
@@ -125,15 +113,13 @@ public class UsuarioService {
     }
 
     private boolean existeTienda(String codigoTienda) {
-        Tienda response = tiendaService.getTiendaByCodigo(codigoTienda);
-        return response != null;
+        Tienda tienda = tiendaService.getTiendaByCodigo(codigoTienda);
+        return tienda != null;
     }
 
     private boolean tiendaHabilitada(String codigoTienda) {
-        Tienda response = tiendaService.getTiendaByCodigo(codigoTienda);
-        if (response != null) {
-            return response.isHabilitada();
-        }
-        return false;
+        Tienda tienda = tiendaService.getTiendaByCodigo(codigoTienda);
+        return tienda != null && tienda.isHabilitada();
     }
+
 }

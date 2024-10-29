@@ -19,31 +19,75 @@ export function UserUpload() {
     setErrors([]);
 
     Papa.parse(file, {
+      delimiter: ';',
+      skipEmptyLines: true,
       complete: async (results) => {
         const users = results.data.slice(1).map((row: any) => ({
-          username: row[0],
-          password: row[1],
-          name: row[2],
-          lastName: row[3],
-          storeCode: row[4],
+          nombreUsuario: row[0],
+          contrasena: row[1],
+          nombre: row[2],
+          apellido: row[3],
+          tiendaId: row[4],
+          habilitado: true, // Asignamos `habilitado` como `true` por defecto
         }));
 
         try {
           const uploadErrors: UploadError[] = [];
+
           users.forEach((user: any, index: number) => {
-            if (!user.username || !user.password || !user.name || !user.lastName || !user.storeCode) {
+            if (
+              !user.nombreUsuario ||
+              !user.contrasena ||
+              !user.nombre ||
+              !user.apellido ||
+              !user.tiendaId
+            ) {
               uploadErrors.push({
                 line: index + 2,
-                message: 'All fields are required',
+                message: 'Todos los campos son obligatorios',
               });
             }
           });
 
-          setErrors(uploadErrors);
+          if (uploadErrors.length > 0) {
+            setErrors(uploadErrors);
+            setIsUploading(false);
+            return;
+          }
+
+          const response = await fetch('http://localhost:8081/api/usuarios/carga-masiva', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(users),
+          });
+
+          debugger
+
+          const result = await response.json(); // Procesa el JSON de la respuesta
+
+          if (result.errors && Array.isArray(result.errors)) {
+            // Si hay errores en el contenido de la respuesta
+            const serverErrors = result.errors.map((err: any) => ({
+              line: err.line || 0, // Asegura que haya siempre un valor para 'line'
+              message: err.message || 'Error desconocido',
+            }));
+            setErrors(serverErrors);
+          } else {
+            alert('¡Usuarios cargados exitosamente!');
+          }
         } catch (error) {
-          console.error('Error uploading users:', error);
+          console.error('Error al cargar usuarios:', error);
+          setErrors([
+            {
+              line: 0,
+              message: 'Ocurrió un error inesperado. Inténtalo de nuevo.',
+            },
+          ]);
         } finally {
           setIsUploading(false);
+          event.target.value = ''; // Resetea el input para permitir cargar el mismo archivo nuevamente
         }
       },
       header: false,
@@ -53,7 +97,7 @@ export function UserUpload() {
   return (
     <div className="space-y-6">
       <div className="bg-white shadow rounded-lg p-6">
-        <h2 className="text-lg font-medium mb-4">Bulk User Upload</h2>
+        <h2 className="text-lg font-medium mb-4">Carga masiva de usuarios</h2>
 
         <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
           <input
@@ -69,23 +113,24 @@ export function UserUpload() {
           >
             <Upload className="h-6 w-6 text-gray-400" />
             <span className="text-sm text-gray-600">
-              {isUploading ? 'Uploading...' : 'Click to upload CSV file'}
+              {isUploading ? 'Cargando...' : 'Haga clic para cargar el archivo CSV'}
             </span>
           </label>
           <p className="mt-1 text-xs text-gray-500">
-            Format: username;password;name;lastName;storeCode
+            Formato: nombreUsuario;contrasena;nombre;apellido;tiendaId
           </p>
         </div>
 
         {errors.length > 0 && (
           <div className="mt-6">
-            <h3 className="text-sm font-medium text-red-800 mb-2">Upload Errors</h3>
+            <h3 className="text-sm font-medium text-red-800 mb-2">Errores de carga</h3>
             <div className="bg-red-50 rounded-lg p-4">
               {errors.map((error, index) => (
                 <div key={index} className="flex items-start space-x-2 text-sm text-red-700">
                   <AlertCircle className="h-4 w-4 mt-0.5 flex-shrink-0" />
                   <span>
-                    Line {error.line}: {error.message}
+                    {error.line > 0 ? `Línea ${error.line}: ` : ''}
+                    {error.message}
                   </span>
                 </div>
               ))}

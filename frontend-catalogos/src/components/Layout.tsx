@@ -16,7 +16,7 @@ export function Layout() {
               </div>
               <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
                 <Link
-                  to="/purchase-orders"
+                  to="/ordenes-de-compra"
                   className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
                     location.pathname === '/purchase-orders'
                       ? 'border-indigo-500 text-gray-900'
@@ -24,10 +24,10 @@ export function Layout() {
                   }`}
                 >
                   <ShoppingBag className="h-4 w-4 mr-2" />
-                  Purchase Orders
+                  Ordenes de Compra
                 </Link>
                 <Link
-                  to="/catalogs"
+                  to="/catalogos"
                   className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${
                     location.pathname === '/catalogs'
                       ? 'border-indigo-500 text-gray-900'
@@ -35,9 +35,8 @@ export function Layout() {
                   }`}
                 >
                   <Store className="h-4 w-4 mr-2" />
-                  Catalogs
+                  Catalogos
                 </Link>
-                {/* Añade este bloque para el nuevo enlace */}
                 <Link
                   to="/carga-masiva"
                   className={`inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium ${

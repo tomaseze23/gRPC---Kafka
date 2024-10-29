@@ -23,7 +23,6 @@ import jakarta.xml.bind.annotation.XmlType;
  *   <complexContent>
  *     <restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       <sequence>
- *         <element name="id" type="{http://www.w3.org/2001/XMLSchema}long"/>
  *         <element name="nombre_usuario" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         <element name="contrasena" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         <element name="tienda_id" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
@@ -40,7 +39,6 @@ import jakarta.xml.bind.annotation.XmlType;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "usuario", propOrder = {
-    "id",
     "nombreUsuario",
     "contrasena",
     "tiendaId",
@@ -50,7 +48,6 @@ import jakarta.xml.bind.annotation.XmlType;
 })
 public class Usuario {
 
-    protected long id;
     @XmlElement(name = "nombre_usuario", required = true)
     protected String nombreUsuario;
     @XmlElement(required = true)
@@ -62,22 +59,6 @@ public class Usuario {
     @XmlElement(required = true)
     protected String apellido;
     protected Boolean habilitado;
-
-    /**
-     * Obtiene el valor de la propiedad id.
-     * 
-     */
-    public long getId() {
-        return id;
-    }
-
-    /**
-     * Define el valor de la propiedad id.
-     * 
-     */
-    public void setId(long value) {
-        this.id = value;
-    }
 
     /**
      * Obtiene el valor de la propiedad nombreUsuario.

@@ -1,12 +1,13 @@
 export type PurchaseOrder = {
   id: string;
-  productCode: string;
-  productName: string;
-  quantity: number;
-  status: 'PENDING' | 'APPROVED' | 'REJECTED';
-  storeCode: string;
-  date: string;
+  estado: 'ACEPTADA' | 'RECHAZADA' | 'SOLICITADA' | 'PAUSADA'; // Cambiado para coincidir con el componente
+  tiendaId: string; // Identificador de la tienda
+  fechaSolicitud: string; // Fecha de solicitud
+  fechaEnvio?: string; // Campo opcional para la fecha de envío
+  fechaRecepcion?: string; // Campo opcional para la fecha de recepción
+  observaciones?: string; // Campo opcional para observaciones
 };
+
 
 export type SavedFilter = {
   id: string;

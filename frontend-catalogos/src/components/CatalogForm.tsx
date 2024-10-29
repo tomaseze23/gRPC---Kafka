@@ -60,7 +60,6 @@ export function CatalogForm({ onClose, catalog }: CatalogFormProps) {
       tiendaId: selectedTienda,
       productIds: productos.filter((p) => selectedProducts.includes(p.id)),
     };
-    debugger
 
     if (catalog) {
       updateCatalog(catalog.id, catalogData);

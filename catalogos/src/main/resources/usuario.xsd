@@ -6,7 +6,6 @@
     <!-- Definición del tipo complejo "usuario" -->
     <xs:complexType name="usuario">
         <xs:sequence>
-            <xs:element name="id" type="xs:long" />
             <xs:element name="nombre_usuario" type="xs:string" />
             <xs:element name="contrasena" type="xs:string" />
             <xs:element name="tienda_id" type="xs:string" minOccurs="0" />

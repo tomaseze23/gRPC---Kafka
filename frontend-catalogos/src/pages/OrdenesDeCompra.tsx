@@ -3,7 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useStore } from "../store/useStore";
 import { SavedFilter } from "../types";
 
-export function PurchaseOrders() {
+export function OrdenesDeCompra() {
   const purchaseOrders = useStore((state) => state.purchaseOrders);
   const setPurchaseOrders = useStore((state) => state.setPurchaseOrders);
   const savedFilters = useStore((state) => state.savedFilters);

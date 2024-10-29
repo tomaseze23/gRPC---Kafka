@@ -1,10 +1,10 @@
-import { Edit2, FileDown, Plus, Trash2 } from 'lucide-react';
-import { useEffect, useState } from 'react';
-import { CatalogForm } from '../components/CatalogForm';
-import { useStore } from '../store/useStore';
-import type { Catalog } from '../types';
+import { Edit2, FileDown, Plus, Trash2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { CatalogForm } from "../components/CatalogForm";
+import { useStore } from "../store/useStore";
+import type { Catalog } from "../types";
 
-export function Catalogs() {
+export function Catalogos() {
   const catalogs = useStore((state) => state.catalogs);
   const catalogProducts = useStore((state) => state.catalogProducts);
   const loadCatalogs = useStore((state) => state.loadCatalogs);
@@ -25,20 +25,20 @@ export function Catalogs() {
   }, [catalogs, loadCatalogProducts]);
 
   const handleExportPDF = async (catalog: Catalog) => {
-    console.log('Exporting catalog:', catalog.nombreCatalogo);
+    console.log("Exporting catalog:", catalog.nombreCatalogo);
   };
 
   return (
     <div className="space-y-6">
       <div className="bg-white shadow rounded-lg p-6">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-lg font-medium">Product Catalogs</h2>
+          <h2 className="text-lg font-medium">Catalogos de Productos</h2>
           <button
             className="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 flex items-center"
             onClick={() => setShowCatalogForm(true)}
           >
             <Plus className="h-4 w-4 mr-2" />
-            New Catalog
+            Nuevo Catalogo
           </button>
         </div>
 
@@ -46,7 +46,9 @@ export function Catalogs() {
           {catalogs.map((catalog) => (
             <div key={catalog.id} className="bg-gray-50 rounded-lg p-4">
               <div className="flex justify-between items-start mb-4">
-                <h3 className="text-lg font-medium">{catalog.nombreCatalogo}</h3>
+                <h3 className="text-lg font-medium">
+                  {catalog.nombreCatalogo}
+                </h3>
                 <div className="flex space-x-2">
                   <button
                     className="text-gray-600 hover:text-gray-800"
@@ -72,7 +74,10 @@ export function Catalogs() {
               <div className="space-y-2">
                 {catalogProducts[catalog.id]?.length > 0 ? (
                   catalogProducts[catalog.id].map((product) => (
-                    <div key={product.id} className="bg-white p-3 rounded shadow-sm">
+                    <div
+                      key={product.id}
+                      className="bg-white p-3 rounded shadow-sm"
+                    >
                       <div className="flex items-center space-x-3">
                         <img
                           src={product.foto}
@@ -83,7 +88,8 @@ export function Catalogs() {
                     </div>
                   ))
                 ) : (
-                  <p className="text-sm text-gray-500">No products available for this catalog.</p>
+                  <p className="text-sm text-gray-500">No hay productos disponibles para este catálogo.
+                  </p>
                 )}
               </div>
             </div>

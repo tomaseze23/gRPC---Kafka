@@ -16,7 +16,7 @@ const run = async () => {
   
   await consumer.subscribe({ topic: 'solicitudes', fromBeginning: true });
   await consumer.subscribe({ topic: 'despacho', fromBeginning: true });
-  await consumer.subscribe({ topic: 'novedades', fromBeginning: true }); 
+  await consumer.subscribe({ topic: 'novedad', fromBeginning: true }); 
 
   await consumer.run({
     eachMessage: async ({ topic, partition, message }) => {
@@ -30,7 +30,7 @@ const run = async () => {
         console.log('Despacho recibido:', mensaje);
         despachos.push(mensaje); 
         
-      } else if (topic === 'novedades') {
+      } else if (topic === 'novedad') {
         console.log('Novedad recibida:', mensaje);
         novedades.push(mensaje);
         

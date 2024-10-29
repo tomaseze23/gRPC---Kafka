@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import proveedor.dto.ProductoDTO;
 import proveedor.models.ItemOrdenCompra;
 import proveedor.models.OrdenCompra;
@@ -43,8 +45,8 @@ public class ProductoService {
     }
 
     @Transactional
-    public void modificarStock(Long productoId, Integer nuevaCantidad) throws Exception {
-        Producto producto = productoRepository.findById(productoId).orElse(null);
+    public void modificarStock(String productoId, Integer nuevaCantidad) throws Exception {
+        Producto producto = productoRepository.findByCodigo(productoId).orElse(null);
         if (producto == null) {
             throw new Exception("Producto no encontrado");
         }
@@ -54,14 +56,14 @@ public class ProductoService {
 
         // Reprocesar órdenes pausadas
         List<OrdenCompra> ordenesPausadas = ordenCompraRepository.findOrdenesPausadasPorProducto(productoId);
-
+        ObjectMapper objectMapper = new ObjectMapper();
         for (OrdenCompra orden : ordenesPausadas) {
             List<ItemOrdenCompra> items = itemOrdenCompraRepository.findByOrdenCompraId(orden.getId());
 
             boolean puedeActualizar = true;
 
             for (ItemOrdenCompra item : items) {
-                if (item.getProducto().getId().equals(productoId)) {
+                if (item.getProducto().getCodigo().equals(productoId)) {
                     if (item.getCantidad() > nuevaCantidad) {
                         puedeActualizar = false;
                         break;
@@ -70,10 +72,7 @@ public class ProductoService {
             }
 
             if (puedeActualizar) {
-                orden.setEstado("ACEPTADA");
-                ordenCompraRepository.save(orden);
-
-                // Generar orden de despacho
+                // Crear orden de despacho y guardar en la base de datos
                 OrdenDespacho ordenDespacho = new OrdenDespacho();
                 ordenDespacho.setOrdenCompra(orden);
                 ordenDespacho.setFechaEstimacionEnvio(OffsetDateTime.now().plusDays(7));
@@ -86,11 +85,10 @@ public class ProductoService {
                 mensajeDespacho.put("orden_compra_id", orden.getId());
                 mensajeDespacho.put("fecha_estimacion_envio", ordenDespacho.getFechaEstimacionEnvio().toString());
 
-                kafkaProducerService.sendMessage("despacho", mensajeDespacho);
+                String mensajeJson = objectMapper.writeValueAsString(mensajeDespacho);
+                kafkaProducerService.sendMessage("despacho", mensajeJson);
 
-                // Restar stock
-                //TODO: Revisar esto
-                //nuevaCantidad -= item.getCantidad();
+                // Restar stock y actualizar
                 producto.setCantidadStockProveedor(nuevaCantidad);
                 productoRepository.save(producto);
             }
@@ -98,7 +96,6 @@ public class ProductoService {
     }
 
     public Producto altaProducto(ProductoDTO productoDTO) throws Exception {
-        // Validar los datos
         Producto producto = new Producto();
         producto.setCodigo(productoDTO.getCodigo());
         producto.setNombre(productoDTO.getNombre());
@@ -107,10 +104,12 @@ public class ProductoService {
         producto.setFoto(String.join(",", productoDTO.getUrls()));
         producto.setCantidadStockProveedor(productoDTO.getCantidadStockProveedor());
         productoRepository.save(producto);
-
-        // Enviar mensaje a Kafka
-        kafkaProducerService.sendMessage("novedades", productoDTO);
-
+    
+        ObjectMapper objectMapper = new ObjectMapper();
+        String mensajeJson = objectMapper.writeValueAsString(productoDTO);
+    
+        kafkaProducerService.sendMessage("novedad", mensajeJson);
+    
         return producto;
     }
 }

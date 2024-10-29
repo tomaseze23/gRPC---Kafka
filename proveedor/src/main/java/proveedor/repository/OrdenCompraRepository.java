@@ -10,7 +10,7 @@ import proveedor.models.OrdenCompra;
 
 @Repository
 public interface OrdenCompraRepository extends JpaRepository<OrdenCompra, Long> {
-    @Query("SELECT DISTINCT oc FROM OrdenCompra oc, ItemOrdenCompra i WHERE oc.id = i.ordenCompra.id AND oc.estado = 'PAUSADA' AND i.producto.id = :productoId")
-    List<OrdenCompra> findOrdenesPausadasPorProducto(@Param("productoId") Long productoId);
+    @Query("SELECT DISTINCT oc FROM OrdenCompra oc, ItemOrdenCompra i WHERE oc.id = i.ordenCompra.id AND oc.estado = 'PAUSADA' AND i.producto.codigo = :codigoProducto")
+    List<OrdenCompra> findOrdenesPausadasPorProducto(@Param("codigoProducto") String codigoProducto);
 }
 

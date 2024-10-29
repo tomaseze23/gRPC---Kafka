@@ -45,7 +45,7 @@ create table if not exists ordenes_compra (
   fecha_envio timestamp with time zone,
   fecha_recepcion timestamp with time zone,
   estado text not null check (
-    estado in ('SOLICITADA', 'RECHAZADA', 'ACEPTADA', 'PAUSADA')
+    estado in ('SOLICITADA', 'RECHAZADA', 'ACEPTADA', 'RECIBIDA')
   ),
   observaciones text,
   foreign key (tienda_id) references tiendas (codigo) on delete cascade

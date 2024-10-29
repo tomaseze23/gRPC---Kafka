@@ -29,6 +29,6 @@ public class Producto {
     private String color;
 
     @Column(name = "cantidad_stock_proveedor", nullable = false)
-    private int cantidadStockProveedor = 0;
+    private int cantidadStockProveedor;
 }
 

@@ -3,7 +3,6 @@ package proveedor.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import proveedor.service.KafkaProducerService;
 import proveedor.service.ProductoService;
 import proveedor.dto.ProductoDTO;
 import proveedor.models.Producto;
@@ -18,20 +17,15 @@ public class ProductoController {
     @Autowired
     private ProductoService productoService;
 
-    @Autowired
-    private KafkaProducerService kafkaProducerService;
-
-    // GET /productos
     @GetMapping
     public ResponseEntity<List<Producto>> obtenerProductos() {
         List<Producto> productos = productoService.obtenerProductos();
         return ResponseEntity.ok(productos);
     }
 
-    // PUT /productos/modificar
     @PutMapping("/modificar")
     public ResponseEntity<?> modificarStock(@RequestBody Map<String, Object> data) {
-        Long productoId = Long.valueOf(data.get("producto_id").toString());
+        String productoId = String.valueOf(data.get("producto_id"));
         Integer nuevaCantidad = Integer.valueOf(data.get("nueva_cantidad").toString());
 
         if (productoId == null || nuevaCantidad == null) {
@@ -46,9 +40,9 @@ public class ProductoController {
         }
     }
 
-    // POST /productos/alta
     @PostMapping("/alta")
     public ResponseEntity<?> altaProducto(@RequestBody ProductoDTO productoDTO) {
+        System.out.println("Alta de producto: " + productoDTO);
         try {
             Producto producto = productoService.altaProducto(productoDTO);
             return ResponseEntity.status(201).body("Producto creado exitosamente");

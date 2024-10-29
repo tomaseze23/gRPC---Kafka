@@ -163,7 +163,7 @@ class AltaProducto extends LitElement {
       this.shadowRoot.querySelector("#urls").selectedOptions
     ).map((option) => option.value);
 
-    const cantidad_stock_proveedor = this.shadowRoot.querySelector(
+    const cantidadStockProveedor = this.shadowRoot.querySelector(
       "#cantidad_stock_proveedor"
     ).value;
 
@@ -173,10 +173,10 @@ class AltaProducto extends LitElement {
       talles,
       colores,
       urls,
-      cantidad_stock_proveedor,
+      cantidadStockProveedor,
     };
 
-    const response = await fetch("/alta", {
+    const response = await fetch("/productos/alta", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

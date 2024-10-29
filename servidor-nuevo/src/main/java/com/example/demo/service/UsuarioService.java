@@ -74,13 +74,6 @@ public class UsuarioService extends UsuarioServiceGrpc.UsuarioServiceImplBase {
                 "SELECT u FROM Usuario u LEFT JOIN FETCH u.tienda", Usuario.class)
                 .getResultList();
 
-        System.out.println("soloHabilitados: " + request.getSoloHabilitados());
-
-        /* .stream()
-                .filter(usuario -> !request.getSoloHabilitados() || usuario.isHabilitado())
-                .collect(Collectors.toList());
-        */
-        System.out.println("listUsuarios: " + usuarios.size());
 
         UsuarioList response = UsuarioList.newBuilder()
                 .addAllUsuarios(usuarios.stream().map(usuario -> com.example.demo.service.Usuario.newBuilder()
@@ -123,24 +116,19 @@ public class UsuarioService extends UsuarioServiceGrpc.UsuarioServiceImplBase {
     
         System.out.println("updateUsuario: " + request);
     
-        // Buscar el usuario por ID en el repositorio
         Optional<Usuario> usuarioOptional = usuarioRepository.findById(request.getId());
     
         if (usuarioOptional.isPresent()) {
-            // Obtener la entidad existente
             Usuario usuario = usuarioOptional.get();
     
-            // Actualizar los campos con los valores del request
             usuario.setNombreUsuario(request.getNombreUsuario());
             usuario.setContrasena(request.getContrasena());
             usuario.setNombre(request.getNombre());
             usuario.setApellido(request.getApellido());
             usuario.setHabilitado(request.getHabilitado());
     
-            // Guardar el usuario actualizado
             usuarioRepository.save(usuario);
     
-            // Construir la respuesta
             com.example.demo.service.Usuario response = com.example.demo.service.Usuario.newBuilder()
                     .setId(usuario.getId())
                     .setNombreUsuario(usuario.getNombreUsuario())
@@ -150,11 +138,9 @@ public class UsuarioService extends UsuarioServiceGrpc.UsuarioServiceImplBase {
                     .setHabilitado(usuario.isHabilitado())
                     .build();
     
-            // Enviar la respuesta al cliente
             responseObserver.onNext(response);
             responseObserver.onCompleted();
         } else {
-            // Usuario no encontrado, enviar error
             responseObserver.onError(new RuntimeException("Usuario no encontrado"));
         }
     }

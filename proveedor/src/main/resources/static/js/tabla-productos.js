@@ -55,7 +55,7 @@ class TablaProductos extends LitElement {
               <td>${producto.id}</td>
               <td>${producto.nombre}</td>
               <td>${producto.codigo}</td>
-              <td><input type="number" id="cantidad-${producto.codigo}" value="${producto.cantidad_stock_proveedor}" min="0"></td>
+              <td><input type="number" id="cantidad-${producto.codigo}" value="${producto.cantidadStockProveedor}" min="0"></td>
               <td><button @click="${() => this.modificarStock(producto.codigo)}">Actualizar</button></td>
             </tr>
           `)}

@@ -20,37 +20,31 @@ public class CatalogoProductoService {
     @Autowired
     private CatalogoProductoCliente catalogoProductoCliente;
 
-    // Crear un nuevo CatalogoProducto
     public long crearCatalogoProducto(CatalogoProducto catalogoProducto) {
         CreateCatalogoProductoResponse response = catalogoProductoCliente.createCatalogoProducto(catalogoProducto);
         return response.getCatalogoProductoId();
     }
 
-    // Obtener un CatalogoProducto por ID
     public CatalogoProducto getCatalogoProducto(long id) {
         GetCatalogoProductoResponse response = catalogoProductoCliente.getCatalogoProducto(id);
         return response.getCatalogoProducto();
     }
 
-    // Obtener todos los CatalogoProductos por Catalogo ID
     public List<CatalogoProducto> getAllCatalogoProductoByCatalogo(long catalogoId) {
         GetAllCatalogoProductoByCatalogoResponse response = catalogoProductoCliente.getAllCatalogoProductoByCatalogo(catalogoId);
         return response.getCatalogoProducto();
     }
 
-    // Obtener todos los CatalogoProductos por Tienda ID
     public List<CatalogoProducto> getAllCatalogoProductoByTienda(String tiendaId) {
         GetAllCatalogoProductoByTiendaResponse response = catalogoProductoCliente.getAllCatalogoProductoByTienda(tiendaId);
         return response.getCatalogoProducto();
     }
 
-    // Actualizar un CatalogoProducto existente
     public boolean updateCatalogoProducto(CatalogoProducto catalogoProducto) {
         UpdateCatalogoProductoResponse response = catalogoProductoCliente.updateCatalogoProducto(catalogoProducto);
         return response.isSuccess();
     }
 
-    // Eliminar un CatalogoProducto por ID
     public boolean deleteCatalogoProducto(long id) {
         DeleteCatalogoProductoResponse response = catalogoProductoCliente.deleteCatalogoProducto(id);
         return response.isSuccess();

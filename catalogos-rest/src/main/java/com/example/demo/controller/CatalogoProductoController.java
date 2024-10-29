@@ -21,7 +21,6 @@ public class CatalogoProductoController {
     @Autowired
     private CatalogoProductoService catalogoProductoService;
 
-    // Crear un nuevo CatalogoProducto
     @Operation(summary = "Crear un nuevo catálogo de producto", description = "Crea un nuevo catálogo de producto enviando una solicitud al servicio SOAP")
     @PostMapping("/crear")
     public ResponseEntity<Long> crearCatalogoProducto(@RequestBody CatalogoProductoDTO catalogoProductoDTO) {
@@ -34,7 +33,6 @@ public class CatalogoProductoController {
         return ResponseEntity.ok(catalogoProductoId);
     }
 
-    // Obtener un CatalogoProducto por ID
     @Operation(summary = "Obtener un catálogo de producto por ID", description = "Obtiene un catálogo de producto específico utilizando su ID")
     @GetMapping("/{id}")
     public ResponseEntity<CatalogoProductoDTO> getCatalogoProducto(@PathVariable long id) {
@@ -50,7 +48,6 @@ public class CatalogoProductoController {
         }
     }
 
-    // Obtener todos los CatalogoProductos por Catalogo ID
     @Operation(summary = "Obtener todos los catálogos de productos por ID de catálogo", description = "Obtiene una lista de todos los catálogos de productos asociados a un catálogo específico")
     @GetMapping("/catalogo/{catalogoId}")
     public ResponseEntity<List<CatalogoProductoDTO>> getAllCatalogoProductoByCatalogo(@PathVariable long catalogoId) {
@@ -65,7 +62,6 @@ public class CatalogoProductoController {
         return ResponseEntity.ok(catalogoProductoDTOs);
     }
 
-    // Obtener todos los CatalogoProductos por Tienda ID
     @Operation(summary = "Obtener todos los catálogos de productos por ID de tienda", description = "Obtiene una lista de todos los catálogos de productos asociados a una tienda específica")
     @GetMapping("/tienda/{tiendaId}")
     public ResponseEntity<List<CatalogoProductoDTO>> getAllCatalogoProductoByTienda(@PathVariable String tiendaId) {
@@ -80,7 +76,6 @@ public class CatalogoProductoController {
         return ResponseEntity.ok(catalogoProductoDTOs);
     }
 
-    // Actualizar un CatalogoProducto existente
     @Operation(summary = "Actualizar un catálogo de producto", description = "Actualiza un catálogo de producto existente enviando una solicitud al servicio SOAP")
     @PutMapping("/actualizar")
     public ResponseEntity<Boolean> updateCatalogoProducto(@RequestBody CatalogoProductoDTO catalogoProductoDTO) {

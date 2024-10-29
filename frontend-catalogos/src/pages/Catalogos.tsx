@@ -74,12 +74,12 @@ export function Catalogos() {
                   {catalog.nombreCatalogo}
                 </h3>
                 <div className="flex space-x-2">
-                  <button
+                  {/* <button
                     className="text-gray-600 hover:text-gray-800"
                     onClick={() => setSelectedCatalog(catalog)}
                   >
                     <Edit2 className="h-4 w-4" />
-                  </button>
+                  </button> */}
                   <button
                     className="text-gray-600 hover:text-gray-800"
                     onClick={() => handleExportPDF(catalog)}

@@ -1,4 +1,4 @@
-import { Edit2, Save, Search, Trash2 } from "lucide-react";
+import { Edit2, RefreshCw, Save, Search, Trash2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useStore } from "../store/useStore";
 import { SavedFilter } from "../types";
@@ -52,7 +52,7 @@ export function OrdenesDeCompra() {
     if (savedFiltersSession) {
       setSavedFilters(JSON.parse(savedFiltersSession));
     }
-  
+
     const filtersSession = sessionStorage.getItem("filters");
     if (filtersSession) {
       setFilters(JSON.parse(filtersSession));
@@ -117,41 +117,75 @@ export function OrdenesDeCompra() {
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
-          <input
-            type="date"
-            placeholder="Desde"
-            value={filters.dateFrom}
-            onChange={(e) =>
-              setFilters({ ...filters, dateFrom: e.target.value })
-            }
-            className="border rounded p-2"
-          />
-          <input
-            type="date"
-            placeholder="Hasta"
-            value={filters.dateTo}
-            onChange={(e) => setFilters({ ...filters, dateTo: e.target.value })}
-            className="border rounded p-2"
-          />
-          <select
-            value={filters.status}
-            onChange={(e) => setFilters({ ...filters, status: e.target.value })}
-            className="border rounded p-2"
-          >
-            <option value="">Todos los Estados</option>
-            <option value="PENDIENTE">Pendiente</option>
-            <option value="ACEPTADA">Aceptada</option>
-            <option value="RECHAZADA">Rechazada</option>
-          </select>
-          <input
-            type="text"
-            placeholder="Código de Tienda"
-            value={filters.storeCode}
-            onChange={(e) =>
-              setFilters({ ...filters, storeCode: e.target.value })
-            }
-            className="border rounded p-2"
-          />
+          <div>
+            <label
+              htmlFor="dateFrom"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Fecha Solicitud Desde
+            </label>
+            <input
+              id="dateFrom"
+              type="date"
+              placeholder="Desde"
+              value={filters.dateFrom}
+              onChange={(e) =>
+                setFilters({ ...filters, dateFrom: e.target.value })
+              }
+              className="border rounded p-2 w-full"
+            />
+          </div>
+          <div>
+            <label
+              htmlFor="dateTo"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Fecha Solicitud Hasta
+            </label>
+            <input
+              id="dateTo"
+              type="date"
+              placeholder="Hasta"
+              value={filters.dateTo}
+              onChange={(e) =>
+                setFilters({ ...filters, dateTo: e.target.value })
+              }
+              className="border rounded p-2 w-full"
+            />
+          </div>
+          <div>
+            <label
+              htmlFor="status"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Estado
+            </label>
+            <select
+              id="status"
+              value={filters.status}
+              onChange={(e) =>
+                setFilters({ ...filters, status: e.target.value })
+              }
+              className="border rounded p-2 w-full"
+            >
+              <option value="">Todos los Estados</option>
+              <option value="PENDIENTE">Pendiente</option>
+              <option value="ACEPTADA">Aceptada</option>
+              <option value="RECHAZADA">Rechazada</option>
+            </select>
+          </div>
+          <div>
+            <input
+              id="storeCode"
+              type="text"
+              placeholder="Código de Tienda"
+              value={filters.storeCode}
+              onChange={(e) =>
+                setFilters({ ...filters, storeCode: e.target.value })
+              }
+              className="border rounded p-2 w-full"
+            />
+          </div>
         </div>
 
         <div className="flex justify-between items-center mb-6">
@@ -212,27 +246,25 @@ export function OrdenesDeCompra() {
             <h3 className="text-sm font-medium text-gray-700 mb-2">
               Filtros Guardados
             </h3>
-            <div className="space-y-2">
+            <div className="flex flex-wrap gap-2">
               {savedFilters.map((filter) => (
                 <div
                   key={filter.id}
-                  className="flex items-center justify-between bg-gray-50 p-2 rounded"
+                  className="flex items-center justify-between bg-indigo-100 text-indigo-700 rounded-full px-4 py-2 shadow hover:bg-indigo-200 cursor-pointer"
+                  onClick={() => handleApplyFilter(filter)} // Aplica el filtro al hacer clic
                 >
-                  <span>{filter.name}</span>
-                  <div className="space-x-2">
-                    <button
-                      className="text-indigo-600 hover:text-indigo-800"
-                      onClick={() => handleApplyFilter(filter)}
-                    >
-                      <Edit2 className="h-4 w-4" />
-                    </button>
-                    <button
-                      className="text-red-600 hover:text-red-800"
-                      onClick={() => handleDeleteFilter(filter.id)}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </button>
-                  </div>
+                  <span className="text-sm font-semibold mr-2">
+                    {filter.name}
+                  </span>
+                  <button
+                    className="text-red-600 hover:text-red-800"
+                    onClick={(e) => {
+                      e.stopPropagation(); // Evita el trigger del seteo cuando se elimina
+                      handleDeleteFilter(filter.id);
+                    }}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
                 </div>
               ))}
             </div>

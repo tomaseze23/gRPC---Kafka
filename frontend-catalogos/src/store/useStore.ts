@@ -70,26 +70,24 @@ export const useStore = create<Store>((set, get) => ({
           }),
         }
       );
-  
+
       if (!catalogResponse.ok) throw new Error("Error adding catalog");
-  
+
       const newCatalog = await catalogResponse.json();
-  
+
       // Now, add each selected product to the new catalog
       let { productIds } = catalogData;
-    // Check if productIds contains objects and extract IDs if necessary
-    if (productIds.length > 0 && typeof productIds[0] === 'object') {
-      productIds = productIds.map((product) => product.id);
-    }
+      // Check if productIds contains objects and extract IDs if necessary
+      if (productIds.length > 0 && typeof productIds[0] === "object") {
+        productIds = productIds.map((product) => product.id);
+      }
       // Access the products from the store
       const productsInStore = get().products;
-  debugger
       // Get the full product data based on the IDs
       const selectedProducts = productsInStore.filter((product) =>
         productIds.includes(product.id)
       );
-  
-  
+
       // Use Promise.all to add products concurrently
       await Promise.all(
         selectedProducts.map(async (product) => {
@@ -109,12 +107,12 @@ export const useStore = create<Store>((set, get) => ({
               }),
             }
           );
-  
+
           if (!productResponse.ok)
             throw new Error("Error adding product to catalog");
         })
       );
-  
+
       // Update the catalogs state
       set((state) => ({
         catalogs: [...state.catalogs, newCatalog],
@@ -124,20 +122,41 @@ export const useStore = create<Store>((set, get) => ({
     }
   },
 
-  updateCatalog: async (id, catalog) => {
+  updateCatalog: async (id, catalogData) => {
     try {
-      const response = await fetch(
+      const responseProducts = await fetch(
+        `http://localhost:8081/api/catalogoproducto/catalogo/${id}`
+      );
+      if (!responseProducts.ok)
+        throw new Error("Error loading catalog products");
+      const catalogProducts = await responseProducts.json();
+
+      await Promise.all(
+        catalogProducts.map(async (product) => {
+          const deleteResponse = await fetch(
+            `http://localhost:8081/api/catalogoproducto/${product.id}`,
+            {
+              method: "DELETE",
+            }
+          );
+          if (!deleteResponse.ok)
+            throw new Error("Error deleting product from catalog");
+        })
+      );
+
+      const responseUpdate = await fetch(
         `http://localhost:8081/api/catalogo/actualizar`,
         {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ id, ...catalog }),
+          body: JSON.stringify({ id, ...catalogData }),
         }
       );
-      if (!response.ok) throw new Error("Error updating catalog");
-      const updatedCatalog = await response.json();
+      if (!responseUpdate.ok) throw new Error("Error updating catalog");
+      const updatedCatalog = await responseUpdate.json();
+
       set((state) => ({
         catalogs: state.catalogs.map((c) => (c.id === id ? updatedCatalog : c)),
       }));

@@ -7,7 +7,7 @@ type UploadError = {
   message: string;
 };
 
-export function UserUpload() {
+export function CargaMasiva() {
   const [errors, setErrors] = useState<UploadError[]>([]);
   const [isUploading, setIsUploading] = useState(false);
 
@@ -62,8 +62,6 @@ export function UserUpload() {
             },
             body: JSON.stringify(users),
           });
-
-          debugger
 
           const result = await response.json(); // Procesa el JSON de la respuesta
 

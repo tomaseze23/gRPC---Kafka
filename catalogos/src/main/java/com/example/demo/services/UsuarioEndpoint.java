@@ -90,10 +90,8 @@ public class UsuarioEndpoint {
             usuario.setTienda(tienda);
         }
 
-        // Guardar el usuario en la base de datos
         Usuario usuarioCreado = usuarioRepository.save(usuario);
 
-        // Mapear la entidad creada a la respuesta
         com.example.usuarios.Usuario usuarioResponse = mapUsuarioToResponse(usuarioCreado);
         response.setUsuarioCreado(usuarioResponse);
         response.setMensaje("Usuario creado exitosamente.");

@@ -3,13 +3,20 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.CatalogoDTO;
 import com.example.demo.service.CatalogoService;
+import com.example.demo.service.PdfExportService;
 import com.example.demo.util.DateConverter;
 import com.example.demo.wsdl.catalogo.Catalogo;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ContentDisposition;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.IOException;
+import org.springframework.http.HttpHeaders;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,6 +27,9 @@ public class CatalogoController {
 
     @Autowired
     private CatalogoService catalogoService;
+
+    @Autowired
+    private PdfExportService pdfExportService;
 
     @Operation(summary = "Crear un nuevo catálogo", description = "Crea un nuevo catálogo enviando una solicitud al servicio SOAP")
     @PostMapping("/crear")
@@ -81,5 +91,23 @@ public class CatalogoController {
     public ResponseEntity<Boolean> deleteCatalogo(@PathVariable long id) {
         boolean success = catalogoService.deleteCatalogo(id);
         return ResponseEntity.ok(success);
+    }
+
+    @Operation(summary = "Exportar catálogo a PDF", description = "Genera y exporta un PDF del catálogo específico")
+    @GetMapping("/{id}/export-pdf")
+    public void exportCatalogToPDF(@PathVariable Long id, HttpServletResponse response) throws IOException {
+        response.setContentType("application/pdf");
+
+        ContentDisposition contentDisposition = ContentDisposition.builder("inline")
+                .filename("catalogo_" + id + ".pdf")
+                .build();
+
+        response.setHeader(HttpHeaders.CONTENT_DISPOSITION, contentDisposition.toString());
+
+        try {
+            pdfExportService.exportCatalogToPDF(id, response);
+        } catch (Exception e) {
+            response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, "Error al generar el PDF");
+        }
     }
 }

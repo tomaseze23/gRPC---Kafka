@@ -25,9 +25,33 @@ export function Catalogos() {
   }, [catalogs, loadCatalogProducts]);
 
   const handleExportPDF = async (catalog: Catalog) => {
-    console.log("Exporting catalog:", catalog.nombreCatalogo);
-  };
+    try {
+      const response = await fetch(
+        `http://localhost:8081/api/catalogo/${catalog.id}/export-pdf`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/pdf",
+          },
+        }
+      );
 
+      if (!response.ok) {
+        throw new Error("Error al exportar el catálogo a PDF");
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `catalogo_${catalog.id}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    } catch (error) {
+      console.error("Error al exportar catálogo:", error);
+    }
+  };
   return (
     <div className="space-y-6">
       <div className="bg-white shadow rounded-lg p-6">
@@ -78,17 +102,16 @@ export function Catalogos() {
                       key={product.id}
                       className="bg-white p-3 rounded shadow-sm"
                     >
-                      <div className="flex items-center space-x-3">
-                        <img
-                          src={product.foto}
-                          alt={product.nombreProducto}
-                          className="h-16 w-16 object-cover rounded"
-                        />
+                      <div className="text-center">
+                        <span className="text-lg font-medium text-gray-800">
+                          {product.nombreProducto}
+                        </span>
                       </div>
                     </div>
                   ))
                 ) : (
-                  <p className="text-sm text-gray-500">No hay productos disponibles para este catálogo.
+                  <p className="text-sm text-gray-500">
+                    No hay productos disponibles para este catálogo.
                   </p>
                 )}
               </div>

@@ -14,7 +14,7 @@ type CatalogFormProps = {
 export function CatalogForm({ onClose, catalog }: CatalogFormProps) {
   const addCatalog = useStore((state) => state.addCatalog);
   const updateCatalog = useStore((state) => state.updateCatalog);
-  const loadProducts = useStore((state) => state.loadProducts); // Load products action
+  const loadProducts = useStore((state) => state.loadProducts); 
 
 
   const [nombreCatalogo, setNombreCatalogo] = useState(catalog?.nombreCatalogo || '');
@@ -24,7 +24,6 @@ export function CatalogForm({ onClose, catalog }: CatalogFormProps) {
   const [selectedTienda, setSelectedTienda] = useState<string>(catalog?.tiendaId || '');
 
   useEffect(() => {
-    // Fetch stores (tiendas)
     const fetchTiendas = async () => {
       try {
         const response = await fetch('http://localhost:8081/api/tienda');
@@ -59,8 +58,9 @@ export function CatalogForm({ onClose, catalog }: CatalogFormProps) {
     const catalogData = {
       nombreCatalogo,
       tiendaId: selectedTienda,
-      products: productos.filter((p) => selectedProducts.includes(p.id)),
+      productIds: productos.filter((p) => selectedProducts.includes(p.id)),
     };
+    debugger
 
     if (catalog) {
       updateCatalog(catalog.id, catalogData);

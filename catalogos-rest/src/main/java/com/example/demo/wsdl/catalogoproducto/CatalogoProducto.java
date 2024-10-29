@@ -23,7 +23,7 @@ import jakarta.xml.bind.annotation.XmlType;
  *   <complexContent>
  *     <restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       <sequence>
- *         <element name="id" type="{http://www.w3.org/2001/XMLSchema}long"/>
+ *         <element name="id" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         <element name="catalogoId" type="{http://www.w3.org/2001/XMLSchema}long"/>
  *         <element name="nombreProducto" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         <element name="precio" type="{http://www.w3.org/2001/XMLSchema}double"/>
@@ -46,7 +46,8 @@ import jakarta.xml.bind.annotation.XmlType;
 })
 public class CatalogoProducto {
 
-    protected long id;
+    @XmlElement(required = true)
+    protected String id;
     protected long catalogoId;
     @XmlElement(required = true)
     protected String nombreProducto;
@@ -56,16 +57,24 @@ public class CatalogoProducto {
     /**
      * Obtiene el valor de la propiedad id.
      * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
      */
-    public long getId() {
+    public String getId() {
         return id;
     }
 
     /**
      * Define el valor de la propiedad id.
      * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
      */
-    public void setId(long value) {
+    public void setId(String value) {
         this.id = value;
     }
 

@@ -76,15 +76,19 @@ export const useStore = create<Store>((set, get) => ({
       const newCatalog = await catalogResponse.json();
   
       // Now, add each selected product to the new catalog
-      const { productIds } = catalogData;
-  
+      let { productIds } = catalogData;
+    // Check if productIds contains objects and extract IDs if necessary
+    if (productIds.length > 0 && typeof productIds[0] === 'object') {
+      productIds = productIds.map((product) => product.id);
+    }
       // Access the products from the store
       const productsInStore = get().products;
-  
+  debugger
       // Get the full product data based on the IDs
       const selectedProducts = productsInStore.filter((product) =>
         productIds.includes(product.id)
       );
+  
   
       // Use Promise.all to add products concurrently
       await Promise.all(
@@ -97,9 +101,9 @@ export const useStore = create<Store>((set, get) => ({
                 "Content-Type": "application/json",
               },
               body: JSON.stringify({
-                id: 0,
-                catalogoId: newCatalog.id,
-                nombreProducto: product.nombreProducto,
+                id: product.codigo,
+                catalogoId: newCatalog,
+                nombreProducto: product.nombre,
                 precio: product.precio,
                 descripcion: product.descripcion,
               }),

@@ -79,15 +79,6 @@ export function Catalogs() {
                           alt={product.nombreProducto}
                           className="h-16 w-16 object-cover rounded"
                         />
-                        <div>
-                          <h4 className="font-medium">{product.nombreProducto}</h4>
-                          <p className="text-sm text-gray-500">
-                            Precio: ${product.precio.toFixed(2)}
-                          </p>
-                          <p className="text-sm text-gray-500">
-                            Descripción: {product.descripcion}
-                          </p>
-                        </div>
                       </div>
                     </div>
                   ))

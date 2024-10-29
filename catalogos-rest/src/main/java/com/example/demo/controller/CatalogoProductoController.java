@@ -29,9 +29,7 @@ public class CatalogoProductoController {
         catalogoProducto.setId(catalogoProductoDTO.getId());
         catalogoProducto.setCatalogoId(catalogoProductoDTO.getCatalogoId());
         catalogoProducto.setNombreProducto(catalogoProductoDTO.getNombreProducto());
-        catalogoProducto.setPrecio(catalogoProductoDTO.getPrecio());
-        catalogoProducto.setDescripcion(catalogoProductoDTO.getDescripcion());
-
+     
         long catalogoProductoId = catalogoProductoService.crearCatalogoProducto(catalogoProducto);
         return ResponseEntity.ok(catalogoProductoId);
     }
@@ -46,8 +44,6 @@ public class CatalogoProductoController {
             catalogoProductoDTO.setId(catalogoProducto.getId());
             catalogoProductoDTO.setCatalogoId(catalogoProducto.getCatalogoId());
             catalogoProductoDTO.setNombreProducto(catalogoProducto.getNombreProducto());
-            catalogoProductoDTO.setPrecio(catalogoProducto.getPrecio());
-            catalogoProductoDTO.setDescripcion(catalogoProducto.getDescripcion());
             return ResponseEntity.ok(catalogoProductoDTO);
         } else {
             return ResponseEntity.notFound().build();
@@ -64,8 +60,6 @@ public class CatalogoProductoController {
             dto.setId(catalogoProducto.getId());
             dto.setCatalogoId(catalogoProducto.getCatalogoId());
             dto.setNombreProducto(catalogoProducto.getNombreProducto());
-            dto.setPrecio(catalogoProducto.getPrecio());
-            dto.setDescripcion(catalogoProducto.getDescripcion());
             return dto;
         }).collect(Collectors.toList());
         return ResponseEntity.ok(catalogoProductoDTOs);
@@ -81,8 +75,6 @@ public class CatalogoProductoController {
             dto.setId(catalogoProducto.getId());
             dto.setCatalogoId(catalogoProducto.getCatalogoId());
             dto.setNombreProducto(catalogoProducto.getNombreProducto());
-            dto.setPrecio(catalogoProducto.getPrecio());
-            dto.setDescripcion(catalogoProducto.getDescripcion());
             return dto;
         }).collect(Collectors.toList());
         return ResponseEntity.ok(catalogoProductoDTOs);
@@ -96,14 +88,11 @@ public class CatalogoProductoController {
         catalogoProducto.setId(catalogoProductoDTO.getId());
         catalogoProducto.setCatalogoId(catalogoProductoDTO.getCatalogoId());
         catalogoProducto.setNombreProducto(catalogoProductoDTO.getNombreProducto());
-        catalogoProducto.setPrecio(catalogoProductoDTO.getPrecio());
-        catalogoProducto.setDescripcion(catalogoProductoDTO.getDescripcion());
 
         boolean success = catalogoProductoService.updateCatalogoProducto(catalogoProducto);
         return ResponseEntity.ok(success);
     }
 
-    // Eliminar un CatalogoProducto por ID
     @Operation(summary = "Eliminar un catálogo de producto", description = "Elimina un catálogo de producto específico utilizando su ID")
     @DeleteMapping("/{id}")
     public ResponseEntity<Boolean> deleteCatalogoProducto(@PathVariable long id) {

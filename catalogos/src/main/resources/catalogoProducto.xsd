@@ -6,7 +6,7 @@
 
     <xs:complexType name="CatalogoProducto">
         <xs:sequence>
-            <xs:element name="id" type="xs:long" />
+            <xs:element name="id" type="xs:string" />
             <xs:element name="catalogoId" type="xs:long" />
             <xs:element name="nombreProducto" type="xs:string" />
             <xs:element name="precio" type="xs:double" />

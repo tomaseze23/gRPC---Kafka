@@ -62,7 +62,7 @@ public class CatalogoProductoEndpoint {
 
         Optional<Catalogo> catalogoOptional = catalogoRepository
                 .findById(request.getCatalogoProducto().getCatalogoId());
-        Optional<Producto> productoOptional = productoRepository.findById(request.getCatalogoProducto().getId());
+        Optional<Producto> productoOptional = productoRepository.findByCodigo(request.getCatalogoProducto().getId());
 
         if (catalogoOptional.isPresent() && productoOptional.isPresent()) {
             CatalogoProducto catalogoProducto = new CatalogoProducto();
@@ -84,14 +84,15 @@ public class CatalogoProductoEndpoint {
             @RequestPayload UpdateCatalogoProductoRequest request) {
         UpdateCatalogoProductoResponse response = new UpdateCatalogoProductoResponse();
         Optional<CatalogoProducto> catalogoProductoOptional = catalogoProductoRepository
-                .findById(request.getCatalogoProducto().getId());
+                .findByProductoCodigo(request.getCatalogoProducto().getId());
 
         if (catalogoProductoOptional.isPresent()) {
             CatalogoProducto catalogoProducto = catalogoProductoOptional.get();
 
             Optional<Catalogo> catalogoOptional = catalogoRepository
                     .findById(request.getCatalogoProducto().getCatalogoId());
-            Optional<Producto> productoOptional = productoRepository.findById(request.getCatalogoProducto().getId());
+            Optional<Producto> productoOptional = productoRepository
+                    .findByCodigo(request.getCatalogoProducto().getId());
 
             if (catalogoOptional.isPresent() && productoOptional.isPresent()) {
                 catalogoProducto.setCatalogo(catalogoOptional.get());
@@ -129,7 +130,7 @@ public class CatalogoProductoEndpoint {
     private com.example.catalogoproducto.CatalogoProducto mapCatalogoProductoToResponse(
             CatalogoProducto catalogoProducto) {
         com.example.catalogoproducto.CatalogoProducto responseCatalogoProducto = new com.example.catalogoproducto.CatalogoProducto();
-        responseCatalogoProducto.setId(catalogoProducto.getId());
+        responseCatalogoProducto.setId(String.valueOf(catalogoProducto.getId()));
         responseCatalogoProducto.setCatalogoId(catalogoProducto.getCatalogo().getId());
         responseCatalogoProducto.setNombreProducto(catalogoProducto.getProducto().getNombre());
         return responseCatalogoProducto;
@@ -155,7 +156,8 @@ public class CatalogoProductoEndpoint {
             @RequestPayload GetAllCatalogoProductoByTiendaRequest request) {
         GetAllCatalogoProductoByTiendaResponse response = new GetAllCatalogoProductoByTiendaResponse();
 
-        List<CatalogoProducto> catalogoProductos = catalogoProductoRepository.findByCatalogoTiendaCodigo(request.getTiendaId());
+        List<CatalogoProducto> catalogoProductos = catalogoProductoRepository
+                .findByCatalogoTiendaCodigo(request.getTiendaId());
         for (CatalogoProducto catalogoProducto : catalogoProductos) {
             response.getCatalogoProducto().add(mapCatalogoProductoToResponse(catalogoProducto));
         }

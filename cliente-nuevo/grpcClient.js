@@ -1,10 +1,10 @@
-const loadGrpcService = require('./utils');
+const initializeGrpcClient = require('./utils');
 
-const greeterClient = loadGrpcService('helloworld.proto', 'helloworld', 'Greeter');
-const usuarioClient = loadGrpcService('usuario.proto', 'usuario', 'UsuarioService');
-const tiendaClient = loadGrpcService('tienda.proto', 'tienda', 'TiendaService');
-const productoClient = loadGrpcService('producto.proto', 'producto', 'ProductoService');
-const productoTiendaClient = loadGrpcService('producto_tienda.proto', 'producto_tienda', 'ProductoTiendaService');
+const greeterClient = initializeGrpcClient('helloworld.proto', 'helloworld', 'Greeter');
+const usuarioClient = initializeGrpcClient('usuario.proto', 'usuario', 'UsuarioService');
+const tiendaClient = initializeGrpcClient('tienda.proto', 'tienda', 'TiendaService');
+const productoClient = initializeGrpcClient('producto.proto', 'producto', 'ProductoService');
+const productoTiendaClient = initializeGrpcClient('producto_tienda.proto', 'producto_tienda', 'ProductoTiendaService');
 
 
 module.exports = {

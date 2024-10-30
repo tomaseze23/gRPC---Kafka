@@ -1,0 +1,31 @@
+syntax = "proto3";
+
+
+option java_multiple_files = true;
+option java_package = "com.proto.service";
+option java_outer_classname = "ProductoProto";
+
+package producto;
+
+message EmptyRequest {}
+
+message Producto {
+    int64 id = 1;
+    string nombre = 2;
+    string codigo = 3;
+    string talle = 4;
+    string foto = 5;
+    string color = 6;
+}
+
+message ProductoList {
+    repeated Producto productos = 1;
+}
+
+service ProductoService {
+    rpc CreateProducto(Producto) returns (Producto);
+    rpc GetProducto(Producto) returns (Producto);
+    rpc UpdateProducto(Producto) returns (Producto);
+    rpc DeleteProducto(Producto) returns (Producto);
+    rpc ListProductos(EmptyRequest) returns (ProductoList);
+}

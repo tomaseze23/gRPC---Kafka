@@ -4,16 +4,22 @@ const path = require('path');
 const config = require('./config/config');
 
 /**
- * Carga un servicio gRPC desde un archivo .proto.
- * @param {string} protoFileName - nombre del archivo .proto que contiene el servicio.
- * @param {string} packageName - nombre del paquete en el archivo .proto.
- * @param {string} serviceName - nombre del servicio dentro del paquete.
- * @returns {Object} - una instancia del servicio.
+ * Carga un servicio gRPC desde un archivo de definici n de protocolo (.proto)
+ * y devuelve una instancia de ese servicio.
+ *
+ * @param {string} protoFileName - nombre del archivo .proto que contiene el
+ *      servicio.
+ * @param {string} packageName - nombre del paquete en el que se encuentra el
+ *      servicio.
+ * @param {string} serviceName - nombre del servicio que se va a cargar.
+ *
+ * @throws {Error} si el servicio no se encuentra en el paquete.
+ *
+ * @returns {Object} una instancia del servicio.
  */
-
-function loadGrpcService(protoFileName, packageName, serviceName) {
-    const PROTO_PATH = path.join(__dirname, 'proto', protoFileName);
-    const packageDefinition = protoLoader.loadSync(PROTO_PATH, {
+function initializeGrpcClient(protoFilename, protoPackage, clientService) {
+    const PROTO_FILE_PATH = path.join(__dirname, 'proto', protoFilename);
+    const protoOptions = protoLoader.loadSync(PROTO_FILE_PATH, {
         keepCase: true,
         longs: String,
         enums: String,
@@ -21,15 +27,14 @@ function loadGrpcService(protoFileName, packageName, serviceName) {
         oneofs: true
     });
 
-    const proto = grpc.loadPackageDefinition(packageDefinition)[packageName];
+    const grpcProto = grpc.loadPackageDefinition(protoOptions)[protoPackage];
 
-    // Verificamos si el servicio está correctamente definido
-    if (!proto || !proto[serviceName]) {
-        throw new Error(`El servicio ${serviceName} no se encontró en el paquete ${packageName}`);
+    if (!grpcProto || !grpcProto[clientService]) {
+        throw new Error(`No se encontró el servicio ${clientService} en el paquete ${protoPackage}`);
     }
 
-    const { host, port } = config.grpcServer;
-    return new proto[serviceName](`${host}:${port}`, grpc.credentials.createInsecure());
+    const { host: grpcHost, port: grpcPort } = config.grpcServer;
+    return new grpcProto[clientService](`${grpcHost}:${grpcPort}`, grpc.credentials.createInsecure());
 }
 
-module.exports = loadGrpcService;
+module.exports = initializeGrpcClient;

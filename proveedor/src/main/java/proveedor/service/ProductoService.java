@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import proveedor.dto.ProductoDTO;
+import proveedor.enums.EstadoDespacho;
 import proveedor.models.ItemOrdenCompra;
 import proveedor.models.OrdenCompra;
 import proveedor.models.OrdenDespacho;
@@ -54,7 +55,7 @@ public class ProductoService {
         productoRepository.save(producto);
 
         // Reprocesar órdenes pausadas
-        List<OrdenCompra> ordenesPausadas = ordenCompraRepository.findOrdenesPausadasPorProducto(productoId);
+        List<OrdenCompra> ordenesPausadas = ordenCompraRepository.findOrdenesSolicitadasPorProducto(productoId);
         ObjectMapper objectMapper = new ObjectMapper();
         for (OrdenCompra orden : ordenesPausadas) {
             List<ItemOrdenCompra> items = itemOrdenCompraRepository.findByOrdenCompraId(orden.getId());
@@ -75,7 +76,7 @@ public class ProductoService {
                 OrdenDespacho ordenDespacho = new OrdenDespacho();
                 ordenDespacho.setOrdenCompra(orden);
                 ordenDespacho.setFechaEstimacionEnvio(OffsetDateTime.now().plusDays(7));
-                ordenDespacho.setEstado("PENDIENTE");
+                ordenDespacho.setEstado(EstadoDespacho.ENVIADO.name());
                 ordenDespachoRepository.save(ordenDespacho);
 
                 // Enviar mensaje a Kafka

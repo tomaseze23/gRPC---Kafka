@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import proveedor.enums.EstadoDespacho;
+import proveedor.enums.EstadoOrdenCompra;
 import proveedor.models.ItemOrdenCompra;
 import proveedor.models.OrdenCompra;
 import proveedor.models.OrdenDespacho;
@@ -64,21 +66,21 @@ public class ModificarEstadoService {
         Map<String, Object> mensajeKafka = new HashMap<>();
 
         if (!errores.isEmpty()) {
-            nuevoEstado = "RECHAZADA";
+            nuevoEstado = EstadoOrdenCompra.RECHAZADA.name();
             String mensaje = String.join(", ", errores);
             mensajeKafka.put("orden_id", ordenId);
             mensajeKafka.put("nuevo_estado", nuevoEstado);
             mensajeKafka.put("errores", mensaje);
             kafkaProducerService.sendMessage("solicitudes", mensajeKafka);
         } else if (!faltantesStock.isEmpty()) {
-            nuevoEstado = "PAUSADA";
+            nuevoEstado = EstadoOrdenCompra.SOLICITADA.name();
             String mensaje = "Artículos sin stock: " + String.join(", ", faltantesStock);
             mensajeKafka.put("orden_id", ordenId);
             mensajeKafka.put("nuevo_estado", nuevoEstado);
             mensajeKafka.put("faltantes", mensaje);
             kafkaProducerService.sendMessage("solicitudes", mensajeKafka);
         } else {
-            nuevoEstado = "ACEPTADA";
+            nuevoEstado = EstadoOrdenCompra.ACEPTADA.name();
             mensajeKafka.put("orden_id", ordenId);
             mensajeKafka.put("nuevo_estado", nuevoEstado);
             kafkaProducerService.sendMessage("solicitudes", mensajeKafka);
@@ -86,7 +88,7 @@ public class ModificarEstadoService {
             OrdenDespacho ordenDespacho = new OrdenDespacho();
             ordenDespacho.setOrdenCompra(orden);
             ordenDespacho.setFechaEstimacionEnvio(OffsetDateTime.now().plusDays(7));
-            ordenDespacho.setEstado("PENDIENTE");
+            ordenDespacho.setEstado(EstadoDespacho.ENVIADO.name());
             ordenDespachoRepository.save(ordenDespacho);
 
             Map<String, Object> mensajeDespacho = new HashMap<>();

@@ -1,23 +1,35 @@
-// OrdenDeCompraService.java
 package proveedor.service;
+
+import java.time.OffsetDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import proveedor.dto.ItemOrdenCompraDTO;
 import proveedor.dto.OrdenCompraDTO;
-import proveedor.service.KafkaProducerService;
-import proveedor.models.*;
-import proveedor.repository.*;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.time.OffsetDateTime;
-import java.util.*;
-import java.util.stream.Collectors;
+import proveedor.enums.EstadoOrdenCompra;
+import proveedor.models.ItemOrdenCompra;
+import proveedor.models.OrdenCompra;
+import proveedor.models.OrdenDespacho;
+import proveedor.models.Producto;
+import proveedor.models.Tienda;
+import proveedor.repository.ItemOrdenCompraRepository;
+import proveedor.repository.OrdenCompraRepository;
+import proveedor.repository.OrdenDespachoRepository;
+import proveedor.repository.ProductoRepository;
+import proveedor.repository.TiendaRepository;
 
 @Service
-public class OrdenDeCompraService {
+public class OrdenCompraService {
 
     @Autowired
     private OrdenCompraRepository ordenCompraRepository;
@@ -39,7 +51,6 @@ public class OrdenDeCompraService {
 
     @Transactional
     public Long crearOrdenCompra(OrdenCompraDTO dto) {
-        // Validar los ítems
         List<String> errores = new ArrayList<>();
         List<Map<String, Object>> faltantesStock = new ArrayList<>();
 
@@ -56,7 +67,6 @@ public class OrdenDeCompraService {
             productosAgrupados.merge(productoId, item.getCantidad(), Integer::sum);
         }
 
-        // Validar stock
         for (Map.Entry<String, Integer> entry : productosAgrupados.entrySet()) {
             String productoId = entry.getKey();
             Integer cantidadSolicitada = entry.getValue();
@@ -76,32 +86,28 @@ public class OrdenDeCompraService {
             }
         }
 
-        // Generar estado y observaciones
         String estado;
         String observaciones;
         if (!errores.isEmpty()) {
-            estado = "RECHAZADA";
+            estado = EstadoOrdenCompra.RECHAZADA.name();
             observaciones = String.join("; ", errores);
         } else if (!faltantesStock.isEmpty()) {
-            estado = "PAUSADA";
+            estado = EstadoOrdenCompra.SOLICITADA.name();
             observaciones = "Artículos faltantes: " + faltantesStock.stream()
                     .map(f -> f.get("producto_id") + ": solicitado " + f.get("cantidad_solicitada") + ", disponible "
                             + f.get("cantidad_disponible"))
                     .collect(Collectors.joining("; "));
         } else {
-            estado = "ACEPTADA";
+            estado = EstadoOrdenCompra.ACEPTADA.name();
             observaciones = "";
         }
 
-        // Insertar orden de compra
         OrdenCompra ordenCompra = new OrdenCompra();
-        // Suponiendo que tienes un TiendaRepository
         Optional<Tienda> tiendaOpt = tiendaRepository.findByCodigo(dto.getTienda_id());
         if (tiendaOpt.isPresent()) {
             ordenCompra.setTienda(tiendaOpt.get());
         } else {
             errores.add("Tienda " + dto.getTienda_id() + ": no existe.");
-            // Manejar el error según corresponda
         }
         ordenCompra.setEstado(estado);
         ordenCompra.setObservaciones(observaciones);
@@ -113,13 +119,12 @@ public class OrdenDeCompraService {
                 ItemOrdenCompra itemOrdenCompra = new ItemOrdenCompra();
                 itemOrdenCompra.setOrdenCompra(ordenCompra);
 
-                // Recuperar el Producto existente
                 Optional<Producto> productoOpt = productoRepository.findByCodigo(itemDTO.getProducto_id());
                 if (productoOpt.isPresent()) {
                     itemOrdenCompra.setProducto(productoOpt.get());
                 } else {
                     errores.add("Artículo " + itemDTO.getProducto_id() + ": no existe en el inventario.");
-                    continue; // O manejar el error según corresponda
+                    continue; 
                 }
 
                 itemOrdenCompra.setColor(itemDTO.getColor());
@@ -129,16 +134,11 @@ public class OrdenDeCompraService {
             }
         }
 
-        // Actualizar stock si no hay errores ni faltantes
         if (errores.isEmpty() && faltantesStock.isEmpty()) {
             actualizarStock(dto.getItems());
-            // Generar orden de despacho
             Long ordenDespachoId = generarOrdenDespacho(ordenCompra.getId());
-            // Enviar mensaje de despacho
             enviarMensajeDespacho(dto.getTienda_id(), ordenDespachoId, ordenCompra.getId());
         }
-
-        // Enviar mensaje a Kafka
         enviarMensajeKafka(dto.getTienda_id(), ordenCompra.getId(), estado, observaciones, dto.getItems());
 
         return ordenCompra.getId();
@@ -184,14 +184,12 @@ public class OrdenDeCompraService {
         mensajeKafka.put("observaciones", observaciones);
         mensajeKafka.put("items", items);
 
-        // Convertir el mensaje a JSON
         try {
             ObjectMapper mapper = new ObjectMapper();
             String mensajeJson = mapper.writeValueAsString(mensajeKafka);
             kafkaProducerService.sendMessage("solicitudes", mensajeJson);
         } catch (Exception e) {
             e.printStackTrace();
-            // Manejar error de serialización
         }
     }
 
@@ -199,13 +197,8 @@ public class OrdenDeCompraService {
         return ordenCompraRepository.findAll();
     }
 
-    public List<ItemOrdenCompra> obtenerItemsPorOrden(Long ordenCompraId) {
-        return itemOrdenCompraRepository.findByOrdenCompraId(ordenCompraId);
-    }
+  
 
-    public Optional<Producto> obtenerArticuloPorId(Long articuloId) {
-        return productoRepository.findById(articuloId);
-    }
 
     @Transactional
     public boolean marcarOrdenRecibida(Long ordenId, Long despachoId) {
@@ -218,7 +211,7 @@ public class OrdenDeCompraService {
         OrdenCompra orden = ordenOpt.get();
         String estado = orden.getEstado();
 
-        if (!estado.equals("ACEPTADA")) {
+        if (!estado.equals(EstadoOrdenCompra.ACEPTADA.name())) {
             System.out.println("Orden " + ordenId
                     + " no puede ser marcada como recibida porque no está en estado ACEPTADA. Está en " + estado);
             return false;
@@ -228,81 +221,6 @@ public class OrdenDeCompraService {
         ordenCompraRepository.save(orden);
 
         System.out.println("Orden " + ordenId + " marcada como recibida con despacho " + despachoId + ".");
-        return true;
-    }
-
-    @Transactional
-    public boolean modificarEstadoOrdenCompra(Long ordenId) {
-        OrdenCompra orden = ordenCompraRepository.findById(ordenId).orElse(null);
-        if (orden == null) {
-            return false;
-        }
-
-        List<String> errores = new ArrayList<>();
-        List<String> faltantesStock = new ArrayList<>();
-
-        List<ItemOrdenCompra> items = itemOrdenCompraRepository.findByOrdenCompraId(ordenId);
-
-        for (ItemOrdenCompra item : items) {
-            Producto producto = productoRepository.findById(item.getProducto().getId()).orElse(null);
-            if (producto == null || item.getCantidad() < 1) {
-                errores.add("Artículo " + item.getProducto().getId() + ": "
-                        + (producto == null ? "no existe" : "cantidad mal informada"));
-            } else if (item.getCantidad() > producto.getCantidadStockProveedor()) {
-                faltantesStock.add(item.getProducto().getId().toString());
-            }
-        }
-
-        String nuevoEstado;
-        Map<String, Object> mensajeKafka = new HashMap<>();
-
-        if (!errores.isEmpty()) {
-            nuevoEstado = "RECHAZADA";
-            String mensaje = String.join(", ", errores);
-            mensajeKafka.put("orden_id", ordenId);
-            mensajeKafka.put("nuevo_estado", nuevoEstado);
-            mensajeKafka.put("errores", mensaje);
-            kafkaProducerService.sendMessage("solicitudes", mensajeKafka);
-        } else if (!faltantesStock.isEmpty()) {
-            nuevoEstado = "PAUSADA";
-            String mensaje = "Artículos sin stock: " + String.join(", ", faltantesStock);
-            mensajeKafka.put("orden_id", ordenId);
-            mensajeKafka.put("nuevo_estado", nuevoEstado);
-            mensajeKafka.put("faltantes", mensaje);
-            kafkaProducerService.sendMessage("solicitudes", mensajeKafka);
-        } else {
-            nuevoEstado = "ACEPTADA";
-            mensajeKafka.put("orden_id", ordenId);
-            mensajeKafka.put("nuevo_estado", nuevoEstado);
-            kafkaProducerService.sendMessage("solicitudes", mensajeKafka);
-
-            // Generar orden de despacho
-            OrdenDespacho ordenDespacho = new OrdenDespacho();
-            ordenDespacho.setOrdenCompra(orden);
-            ordenDespacho.setFechaEstimacionEnvio(OffsetDateTime.now().plusDays(7));
-            ordenDespacho.setEstado("PENDIENTE");
-            ordenDespachoRepository.save(ordenDespacho);
-
-            // Enviar mensaje de despacho
-            Map<String, Object> mensajeDespacho = new HashMap<>();
-            mensajeDespacho.put("orden_despacho_id", ordenDespacho.getId());
-            mensajeDespacho.put("orden_compra_id", ordenId);
-            mensajeDespacho.put("fecha_estimacion_envio", ordenDespacho.getFechaEstimacionEnvio().toString());
-
-            kafkaProducerService.sendMessage("despacho", mensajeDespacho);
-
-            // Restar stock
-            for (ItemOrdenCompra item : items) {
-                Producto producto = item.getProducto();
-                producto.setCantidadStockProveedor(producto.getCantidadStockProveedor() - item.getCantidad());
-                productoRepository.save(producto);
-            }
-        }
-
-        // Actualizar estado de la orden
-        orden.setEstado(nuevoEstado);
-        ordenCompraRepository.save(orden);
-
         return true;
     }
 

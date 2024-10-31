@@ -1,21 +1,24 @@
-// OrdenDeCompraController.java
 package proveedor.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import proveedor.models.OrdenCompra;
-import proveedor.service.OrdenDeCompraService;
+import proveedor.service.ModificarEstadoService;
+import proveedor.service.OrdenCompraService;
 
 import java.util.List;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/ordenes_compra")
-public class OrdenDeCompraController {
+public class OrdenCompraController {
 
     @Autowired
-    private OrdenDeCompraService ordenDeCompraService;
+    private OrdenCompraService ordenDeCompraService;
+
+    @Autowired
+    private ModificarEstadoService modificarEstadoService;
 
     // GET /ordenes_compra
     @GetMapping
@@ -37,7 +40,7 @@ public class OrdenDeCompraController {
             return ResponseEntity.badRequest().body("Falta el parámetro requerido: orden_id");
         }
 
-        boolean actualizado = ordenDeCompraService.modificarEstadoOrdenCompra(ordenId);
+        boolean actualizado = modificarEstadoService.modificarEstadoOrdenCompra(ordenId);
 
         if (!actualizado) {
             return ResponseEntity.status(404).body("Orden no encontrada o no pudo ser actualizada");

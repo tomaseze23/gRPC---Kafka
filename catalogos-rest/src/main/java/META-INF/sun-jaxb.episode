@@ -6,7 +6,7 @@
 Este archivo ha sido generado por Eclipse Implementation of JAXB v4.0.2 
 Visite https://eclipse-ee4j.github.io/jaxb-ri 
 Todas las modificaciones realizadas en este archivo se perderán si se vuelve a compilar el esquema de origen. 
-Generado el: 2024.10.30 a las 08:32:09 AM UYT
+Generado el: 2024.11.10 a las 07:10:05 PM ART
   -->
       
     <bindings xmlns:tns="http://www.example.com/usuarios" if-exists="true" scd="x-schema::tns">

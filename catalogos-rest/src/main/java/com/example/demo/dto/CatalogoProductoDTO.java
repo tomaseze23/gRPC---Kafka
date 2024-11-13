@@ -19,4 +19,29 @@ public class CatalogoProductoDTO {
     @Size(min = 1, max = 255, message = "El campo nombreProducto debe tener entre 1 y 255 caracteres")
     private String nombreProducto;
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public Long getCatalogoId() {
+        return catalogoId;
+    }
+
+    public void setCatalogoId(Long catalogoId) {
+        this.catalogoId = catalogoId;
+    }
+
+    public String getNombreProducto() {
+        return nombreProducto;
+    }
+
+    public void setNombreProducto(String nombreProducto) {
+        this.nombreProducto = nombreProducto;
+    }
+
 }
+

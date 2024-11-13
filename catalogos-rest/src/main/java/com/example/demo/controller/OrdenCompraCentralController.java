@@ -3,15 +3,15 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.OrdenCompraCentralDTO;
 import com.example.demo.service.OrdenCompraCentralService;
-import com.example.demo.wsdl.ordencompra.OrdenCompraCentral;
+import com.example.demo.wsdl.ordencompracentral.OrdenCompraCentral;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/ordencompra-central")
@@ -60,12 +60,10 @@ public class OrdenCompraCentralController {
         OrdenCompraCentralDTO dto = new OrdenCompraCentralDTO();
         dto.setId(entity.getId());
         dto.setTiendaId(entity.getTiendaId());
-        dto.setCodigoArticulo(entity.getCodigoArticulo());
+        dto.setCodigoArticulo(getCodigoArticulo());
         dto.setColor(entity.getColor());
         dto.setTalle(entity.getTalle());
-        dto.setCantidadSolicitada(entity.getCantidadSolicitada());
-        dto.setEstado(entity.getEstado());
-        dto.setObservaciones(entity.getObservaciones());
+        dto.setCantidadSolicitada(getCantidadSolicitada());
         return dto;
     }
 
@@ -75,9 +73,18 @@ public class OrdenCompraCentralController {
         entity.setCodigoArticulo(dto.getCodigoArticulo());
         entity.setColor(dto.getColor());
         entity.setTalle(dto.getTalle());
-        entity.setCantidadSolicitada(dto.getCantidadSolicitada());
-        entity.setEstado(dto.getEstado());
-        entity.setObservaciones(dto.getObservaciones());
+        entity.setCantidadSolicitada(dto.getCantidadSolicitada().toString());
         return entity;
     }
+
+    private String getCodigoArticulo() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    private Integer getCantidadSolicitada() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+
+
 }
